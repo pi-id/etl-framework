@@ -27,3 +27,12 @@ class MetaTaskListFromBatch(generics.ListCreateAPIView):
         
 class MetaTaskListFromBatch(generics.ListCreateAPIView):
     model = MetaBatch
+
+
+class MetaTaskList(generics.ListCreateAPIView):
+    queryset = MetaTask.objects.all()
+    serializer_class = MetaTaskSerializer
+
+class MetaTaskDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MetaTask.objects.all()
+    serializer_class = MetaTaskSerializer

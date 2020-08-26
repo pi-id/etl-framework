@@ -12,6 +12,7 @@ class MetaBatchSerializer(serializers.ModelSerializer):
 class MetaTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = MetaTask
-        fields = ['task_name'] 
+        fields = "__all__"
         
+
      
