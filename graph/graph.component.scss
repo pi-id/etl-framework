@@ -1,0 +1,39 @@
+@media all and (min-width: 768px) {
+    tr  {
+      td {
+        vertical-align: middle !important;
+      }
+      span {
+        &:not([class]) {
+          padding: 1rem 1rem;
+          
+        }
+      }
+    }
+  }
+
+
+
+.tab{
+  text-align: center;
+  background-color: #f1f1f1;
+}
+
+.tabcontent{
+  display: none;
+  background-color: #f1f1f1;
+}
+
+button:focus{
+  color: rgb(8, 7, 17);
+  background: black;
+  box-shadow: black 3px;
+  border:1px solid grey;
+  border-radius: 2px;
+  
+}
+
+
+button:hover{
+  color:  rgb(105, 28, 28);
+}
