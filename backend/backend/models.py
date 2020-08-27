@@ -185,8 +185,8 @@ class DjangoMigrations(models.Model):
 class DjangoSession(models.Model):
     session_key = models.CharField(primary_key=True, max_length=40)
     session_data = models.TextField()
-    expire_date = models.DateTimeField()
 
+    expire_date = models.DateTimeField()
     class Meta:
         managed = False
         db_table = 'django_session'
@@ -212,7 +212,7 @@ class MetaAutoLoad(models.Model):
     related_name = 'autoload_source')
     target_batch_log_sid = models.ForeignKey('MetaBatchLog', models.DO_NOTHING, db_column='target_batch_log_sid', blank=True, null=True,
     related_name = 'autoload_target')
-    task_sid = models.ForeignKey('MetaTask', models.DO_NOTHING, db_column='task_sid', blank=True, null=True)
+    task_sid = models.ForeignKey('MetaTask', on_delete = models.CASCADE, db_column='task_sid', blank=True, null=True)
     source_object_sid = models.ForeignKey('MetaObject', models.DO_NOTHING, db_column='source_object_sid', blank=True, null=True,
     related_name = 'autoload_source')
     target_object_sid = models.ForeignKey('MetaObject', models.DO_NOTHING, db_column='target_object_sid', blank=True, null=True,
@@ -223,7 +223,7 @@ class MetaAutoLoad(models.Model):
     related_name = 'autoload_target')
     automated_load_status = models.CharField(max_length=30, blank=True, null=True)
     population_sid = models.IntegerField(blank=True, null=True)
-    insert_date = models.DateTimeField()
+    insert_date = models.DateTimeField( )
     insert_user = models.CharField(max_length=255)
     update_date = models.DateTimeField(blank=True, null=True)
     update_user = models.CharField(max_length=255, blank=True, null=True)
@@ -371,9 +371,9 @@ class MetaDependencyTask(models.Model):
     depends_on_task_sid = models.ForeignKey('MetaTask', models.DO_NOTHING, db_column='depends_on_task_sid', blank=True, null=True,
     related_name = 'dependeddependencytask')
     dependency_type = models.CharField(max_length=30)
-    dependency_level = models.CharField(max_length=30)
+    dependency_level = models.CharField(max_length=30) # reduntantno, konstanta
     dependency_status = models.CharField(max_length=30, blank=True, null=True)
-    insert_date = models.DateTimeField()
+    insert_date = models.DateTimeField(auto_now = True)
     insert_user = models.CharField(max_length=255)
     update_date = models.DateTimeField(blank=True, null=True)
     update_user = models.CharField(max_length=255, blank=True, null=True)
@@ -518,7 +518,7 @@ class MetaTask(models.Model):
 class MetaTaskLog(models.Model):
     task_log_sid = models.AutoField(primary_key=True)
     batch_log_sid = models.ForeignKey(MetaBatchLog, models.DO_NOTHING, db_column='batch_log_sid')
-    task_sid = models.ForeignKey(MetaTask, models.DO_NOTHING, db_column='task_sid')
+    task_sid = models.ForeignKey(MetaTask, models.CASCADE, db_column='task_sid')
     task_log_status = models.CharField(max_length=50, blank=True, null=True)
     task_log_duration = models.IntegerField(blank=True, null=True)
     start_time = models.DateTimeField(blank=True, null=True)
@@ -569,13 +569,21 @@ class MetaTaskLogDetail(models.Model):
         managed = False
         db_table = 'meta_task_log_detail'
 
-
-class Proba(models.Model):
-    task_sid = models.IntegerField(blank=True, null=True)
-    task_id = models.CharField(max_length=255, blank=True, null=True)
-    task_status = models.CharField(max_length=255, blank=True, null=True)
-    task_order = models.IntegerField(blank=True, null=True)
-
+class DependencyBatchRecursion(models.Model):
+    dependency_sid = models.IntegerField(primary_key=True)
+    batch_name = models.CharField(max_length=500, blank=False, null=True)
+    dependent_batch_name = models.CharField(max_length=500, blank=False, null=True)
+    level = models.IntegerField() 
+    class Meta:
+        managed = False 
+    
+    
+class DependencyTaskRecursion(models.Model): 
+    task_dependency_sid = models.IntegerField(primary_key=True)
+    batch_sid = models.IntegerField()
+    task_name = models.CharField(max_length=500, blank=False, null=False)
+    dependent_task_name = models.CharField(max_length=500, blank=False, null=False)
+    level = models.IntegerField()
+    
     class Meta:
         managed = False
-        db_table = 'proba'
