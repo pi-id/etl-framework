@@ -1,0 +1,51 @@
+<!-- Editable table -->
+  <div class="card">
+    <h3 class="card-header text-center font-weight-bold text-uppercase py-4">META BATCH</h3>
+    <div class="card-body">
+      <div id="table" class="table-editable">
+        <span class="table-add float-right mb-3 mr-2">
+          <a class="text-success">
+            <mdb-icon fas icon="plus" size="2x"></mdb-icon>
+          </a>
+        </span>
+        <table class="table table-bordered table-responsive-md table-striped text-center">
+          <tr>
+            <th class="text-center">batch_sid</th>
+            <th class="text-center">datasource_sid</th>
+            <th class="text-center">batch_id</th>
+            <th class="text-center">batch_name</th>
+            <th class="text-center">batch_desc</th>
+            <th class="text-center">batch_type</th>
+            <th class="text-center">Sort</th>
+            <th class="text-center">Delete</th>
+          </tr>
+          <tr *ngFor="let batch of batches; let id = index">
+            <td>{{batch.batch_sid}}</td>
+            <td>{{batch.datasource_sid}}</td>
+            <td>{{batch.batch_id}}</td>
+            <td>{{batch.batch_name}}</td>
+            <td>{{batch.batch_desc}}</td>
+            <td>{{batch.batch_type}}</td>
+            <td>
+              <span class="table-up">
+                <a class="indigo-text">
+                  <mdb-icon fas icon="long-arrow-alt-up"></mdb-icon>
+                </a>
+              </span>
+              <span class="table-down">
+                <a class="indigo-text">
+                  <mdb-icon fas icon="long-arrow-alt-down"></mdb-icon>
+                </a>
+              </span>
+            </td>
+            <td>
+              <span class="table-remove">
+                <button type="button" (click)="this.service.delete(batch.batch_sid)" mdbBtn color="danger" rounded="true" size="sm" class="my-0">Delete</button>
+              </span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+<!-- Editable table -->
