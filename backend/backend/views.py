@@ -103,3 +103,8 @@ class DependencyTaskRecursionList(generics.ListCreateAPIView):
   join meta_task dependent_task on task_dependency.depends_on_task_sid = dependent_task.task_sid
   order by level asc
         """.format(self.kwargs['batchid']))
+        
+        
+class MetaDatasourceList(generics.ListCreateAPIView):
+    queryset = MetaDatasource.objects.all()
+    serializer_class = MetaDatasourceSerializer
