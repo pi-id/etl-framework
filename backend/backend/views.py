@@ -82,7 +82,7 @@ class DependencyTaskRecursionList(generics.ListCreateAPIView):
     model = DependencyTaskRecursion
     serializer_class = DependencyTaskRecursionSerializer
     def get_queryset(self):
-        a = DependencyTaskRecursion.objects.raw(
+        return DependencyTaskRecursion.objects.raw(
         """ with task_dependency (task_dependency_sid, batch_sid, task_sid, depends_on_task_sid, level)  as
   (
   select task_dependency_sid, batch_sid, task_sid, depends_on_task_sid, 0 
@@ -103,6 +103,3 @@ class DependencyTaskRecursionList(generics.ListCreateAPIView):
   join meta_task dependent_task on task_dependency.depends_on_task_sid = dependent_task.task_sid
   order by level asc
         """.format(self.kwargs['batchid']))
-        print(a)
-        logger.info("test")      
-        return a
