@@ -15,4 +15,5 @@ urlpatterns = [
     path('batches/<negint:batchid>/task-dependencies/<negint:pk>', views.MetaDependencyTaskDetail.as_view()),
     path('tasks', views.MetaTaskList.as_view()),
     path('tasks/<negint:pk>', views.MetaTaskDetail.as_view()),
+    path('datasource', views.MetaDatasourceList.as_view())
 ]   

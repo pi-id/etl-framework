@@ -24,6 +24,11 @@ class MetaDependencyTaskSerializer(serializers.ModelSerializer):
         model = MetaDependencyTask
         fields = "__all__"
         
+class MetaDatasourceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MetaDatasource
+        fields = ['datasource_sid', 'datasource_name']
+        
         
 class DependencyBatchRecursionSerializer(serializers.ModelSerializer):
     class Meta:
