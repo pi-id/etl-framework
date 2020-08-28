@@ -14,7 +14,7 @@ import { Batch } from './batch';
 export class BatchService implements OnInit{
 
   //here usually goes real server adress, this is just a mock 
-  private apiServer = "http://localhost:3000";
+  private apiServer = "http://localhost:9000";
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
