@@ -8,7 +8,6 @@ register_converter(converters.NegativeIntConverter, 'negint')
 urlpatterns = [
     path('batches', views.MetaBatchList.as_view()),
     path('batches/<negint:pk>', views.MetaBatchDetail.as_view()),
-    path('batches/create', views.MetaBatchList.as_view()),
     path('batches/<negint:batchid>/tasks', views.MetaTaskListFromBatch.as_view()),
     path('batches/<negint:batchid>/batch-dependencies',  views.DependencyBatchRecursionList.as_view()),
     path('batches/<negint:batchid>/task-dependencies', views.DependencyTaskRecursionList.as_view()),
