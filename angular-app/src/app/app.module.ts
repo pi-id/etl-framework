@@ -19,6 +19,18 @@ import { MainComponent } from './main/main.component';
 import { RegisterComponent } from './register/register.component';
 
 import {MatTabsModule} from '@angular/material/tabs';
+import {TableModule} from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+import { ToolbarModule } from 'primeng/toolbar';
+import {CalendarModule} from 'primeng/calendar';
+import {SliderModule} from 'primeng/slider';
+import {MultiSelectModule} from 'primeng/multiselect';
+import {ContextMenuModule} from 'primeng/contextmenu';
+import {ButtonModule} from 'primeng/button';
+import {DropdownModule} from 'primeng/dropdown';
+import {ProgressBarModule} from 'primeng/progressbar';
+import {InputTextModule} from 'primeng/inputtext';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 
 
@@ -42,7 +54,20 @@ import {MatTabsModule} from '@angular/material/tabs';
     CommonModule,
     HttpClientModule,
     FormsModule,
-    MDBBootstrapModule.forRoot()
+    MDBBootstrapModule.forRoot(),
+    TableModule,
+    ToastModule,
+    ToolbarModule,
+    CalendarModule,
+		SliderModule,
+		ConfirmDialogModule,
+		MultiSelectModule,
+		ContextMenuModule,
+		DropdownModule,
+		ButtonModule,
+		ToastModule,
+    InputTextModule,
+    ProgressBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
