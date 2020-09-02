@@ -8,10 +8,12 @@ class MetaBatchSerializer(serializers.ModelSerializer):
         fields = "__all__"
      
 class MetaTaskSerializer(serializers.ModelSerializer):
+    batch_name = serializers.CharField(source = 'batch_sid.batch_name', read_only = True)
     class Meta:
         model = MetaTask
-        fields = "__all__"
-        
+        fields = [field.name for field in model._meta.fields]
+        fields.append('batch_name')
+    
     
 class MetaDependencySerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,10 +26,41 @@ class MetaDependencyTaskSerializer(serializers.ModelSerializer):
         model = MetaDependencyTask
         fields = "__all__"
         
+        
 class MetaDatasourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = MetaDatasource
         fields = ['datasource_sid', 'datasource_name']
+        
+
+class MetaObjectSerializer(serializers.ModelSerializer):
+        datasource_name = serializers.CharField(source = 'datasource_sid.datasource_name', read_only = True)
+        object_type_name = serializers.CharField(source = 'object_type_sid.object_type_name', read_only = True)
+        class Meta:
+            model = MetaObject
+            fields = [field.name for field in model._meta.fields]
+            fields.append('datasource_name')
+            fields.append('object_type_name')
+
+
+class MetaObjectTaskSerializer(serializers.ModelSerializer):
+    source_object_name = serializers.CharField(source = 'source_object_sid.object_name', read_only = True)
+    target_object_name = serializers.CharField(source = 'target_object_sid.object_name', read_only = True)
+    task_name = serializers.CharField(source = 'task_sid.task_name', read_only = True)
+    class Meta:
+        model = MetaObjectTask
+        fields = [field.name for field in model._meta.fields]
+        fields.append('source_object_name')
+        fields.append('target_object_name')
+        fields.append('task_sid.task_name')
+        
+
+class MetaAttributeSerializer(serializers.ModelSerializer):
+    task_name = serializers.CharField(source = 'task_sid.task_name', read_only = True)
+    class Meta:
+        model = MetaAttribute
+        fields = [field.name for field in model._meta.fields]
+        fields.append('task_name')
         
         
 class DependencyBatchRecursionSerializer(serializers.ModelSerializer):
