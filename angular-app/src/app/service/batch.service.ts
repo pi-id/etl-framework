@@ -28,7 +28,7 @@ export class BatchService {
   constructor(private httpClient: HttpClient) { }
 
   getAll(): Observable<Batch[]> {
-    return this.httpClient.get<Batch[]>(environment.apiUrl + '/batches')
+    return this.httpClient.get<Batch[]>(environment.apiUrl + '/batches/')
       .pipe(
         catchError(this.errorHandler)
       );
