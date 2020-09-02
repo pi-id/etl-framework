@@ -1,30 +1,93 @@
 from django.shortcuts import render
-from rest_framework import generics 
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.views import APIView 
 from .serializers import *
 from .models import *
-import logging
-logger = logging.getLogger(__name__)
+from django.utils import timezone 
 
-class MetaBatchList(generics.ListCreateAPIView):  
-    queryset = MetaBatch.objects.all()
-    serializer_class = MetaBatchSerializer  
-    
-    
+
+class MetaBatchList(APIView): 
+    """
+    View za 3 HTTP metode:
+    1. GET za dohvaćanje svih batcheva
+    2. POST za stvaranje novoga batcha
+    3. DELETE za brisanje batcheva čiji su id-evi predani preko URL-a.
+    """
+    def get(self, request, format = None):
+        meta_batch_list = MetaBatch.objects.all()
+        serializer = MetaBatchSerializer(meta_batch_list, many = True)
+        return Response(serializer.data)
+         
+    def post(self, request, format=None):
+        serializer = MetaBatchSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(insert_date = timezone.now())
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request, format=None):
+        meta_batch_list = MetaBatch.objects.all()
+        ids = self.request.query_params.get('ids', None)
+        if ids is not None: 
+            ids = ids.split(',')
+            meta_batch_list.filter(batch_sid__in=ids).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
 class MetaBatchDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = MetaBatch.objects.all()
     serializer_class = MetaBatchSerializer    
-    
-  
-class MetaTaskList(generics.ListCreateAPIView):  
-    queryset = MetaTask.objects.all()
-    serializer_class = MetaTaskSerializer
-    
-    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(update_date =  timezone.now())
+        return Response(serializer.data)
+        
+        
+#########################################################################################
+class MetaTaskList(APIView): 
+    """
+    View za 3 HTTP metode:
+    1. GET 
+    2. POST
+    3. DELETE 
+    """
+    def get(self, request, format = None):
+        meta_task_list = MetaTask.objects.all()
+        serializer = MetaTaskSerializer(meta_task_list, many = True)
+        return Response(serializer.data)
+         
+    def post(self, request, format=None):
+        serializer = MetaTaskSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(insert_date = timezone.now())
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request, format=None):
+        meta_task_list = MetaTask.objects.all()
+        ids = self.request.query_params.get('ids', None)
+        if ids is not None: 
+            ids = ids.split(',')
+            meta_task_list.filter(task_sid__in=ids).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
 class MetaTaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = MetaTask.objects.all()
-    serializer_class = MetaTaskSerializer
-
-
+    serializer_class = MetaTaskSerializer    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(update_date =  timezone.now())
+        return Response(serializer.data)
+        
+        
 class MetaTaskListFromBatch(generics.ListCreateAPIView):
     model = MetaTask
     serializer_class = MetaTaskSerializer
@@ -32,6 +95,10 @@ class MetaTaskListFromBatch(generics.ListCreateAPIView):
         queryset = MetaTask.objects.all()
         batchid = self.kwargs['batchid']
         return queryset.filter(batch_sid=batchid)
+
+
+#################################################################################################
+
 
 class MetaDependencyList(generics.ListCreateAPIView):  
     queryset = MetaDependency.objects.all()
@@ -47,10 +114,138 @@ class MetaDependencyTaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = MetaDependencyTask.objects.all()
     serializer_class = MetaDependencyTaskSerializer
 
+
 class MetaDependencyTaskList(generics.ListCreateAPIView):  
     queryset = MetaDependencyTask.objects.all()
     serializer_class = MetaDependencyTaskSerializer
     
+#################################################################################################    
+    
+class MetaObjectTaskList(APIView): 
+    """
+    View za 3 HTTP metode:
+    1. GET 
+    2. POST 
+    3. DELETE 
+    """
+    def get(self, request, format = None):
+        meta_object_task_list = MetaObjectTask.objects.all()
+        serializer = MetaObjectTaskSerializer(meta_object_task_list, many = True)
+        return Response(serializer.data)
+         
+    def post(self, request, format=None):
+        serializer = MetaObjectTaskSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(insert_date = timezone.now())
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request, format=None):
+        meta_object_task_list = MetaObjectTask.objects.all()
+        ids = self.request.query_params.get('ids', None)
+        if ids is not None: 
+            ids = ids.split(',')
+            meta_object_task_list.filter(object_task_sid__in=ids).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class MetaObjectTaskDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MetaObjectTask.objects.all()
+    serializer_class = MetaObjectTaskSerializer    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(update_date =  timezone.now())
+        return Response(serializer.data)
+        
+    
+##########################################################################################
+    
+class MetaAttributeList(APIView): 
+    """
+    View za 3 HTTP metode:
+    1. GET 
+    2. POST 
+    3. DELETE 
+    """
+    def get(self, request, format = None):
+        meta_attribute_list = MetaAttribute.objects.all()
+        serializer = MetaAttributeSerializer(meta_attribute_list, many = True)
+        return Response(serializer.data)
+         
+    def post(self, request, format=None):
+        serializer = MetaAttributeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request, format=None):
+        meta_attribute_list = MetaAttribute.objects.all()
+        ids = self.request.query_params.get('ids', None)
+        if ids is not None: 
+            ids = ids.split(',')
+            meta_attribute_list.filter(attribute_id__in=ids).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class MetaAttributeDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MetaAttribute.objects.all()
+    serializer_class = MetaAttributeSerializer    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+        
+    
+################################################################################################
+
+class MetaObjectList(APIView): 
+    """
+    View za 3 HTTP metode:
+    1. GET 
+    2. POST 
+    3. DELETE 
+    """
+    def get(self, request, format = None):
+        meta_object_list = MetaObject.objects.all()
+        serializer = MetaObjectSerializer(meta_object_list, many = True)
+        return Response(serializer.data)
+         
+    def post(self, request, format=None):
+        serializer = MetaObjectSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(insert_date = timezone.now())
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request, format=None):
+        meta_object_list = MetaObject.objects.all()
+        ids = self.request.query_params.get('ids', None)
+        if ids is not None: 
+            ids = ids.split(',')
+            meta_object_list.filter(object_sid__in=ids).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class MetaObjectDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MetaObject.objects.all()
+    serializer_class = MetaObjectSerializer    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(update_date =  timezone.now())
+        return Response(serializer.data)
+        
+################################################################################################
+
 
 class DependencyBatchRecursionList(generics.ListCreateAPIView):
     model = DependencyBatchRecursion
@@ -105,6 +300,42 @@ class DependencyTaskRecursionList(generics.ListCreateAPIView):
         """.format(self.kwargs['batchid']))
         
         
-class MetaDatasourceList(generics.ListCreateAPIView):
+class MetaDatasourceList(APIView): 
+    """
+    View za 3 HTTP metode:
+    1. GET 
+    2. POST 
+    3. DELETE 
+    """
+    def get(self, request, format = None):
+        meta_datasource_list = MetaDatasource.objects.all()
+        serializer = MetaDatasourceSerializer(meta_datasource_list, many = True)
+        return Response(serializer.data)
+         
+    def post(self, request, format=None):
+        serializer = MetaDatasourceSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(insert_date = timezone.now())
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request, format=None):
+        meta_datasource_list = MetaDatasource.objects.all()
+        ids = self.request.query_params.get('ids', None)
+        if ids is not None: 
+            ids = ids.split(',')
+            meta_datasource_list.filter(datasource_sid__in=ids).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class MetaDatasourceDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = MetaDatasource.objects.all()
-    serializer_class = MetaDatasourceSerializer
+    serializer_class = MetaDatasourceSerializer    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(update_date =  timezone.now())
+        return Response(serializer.data)
+        
