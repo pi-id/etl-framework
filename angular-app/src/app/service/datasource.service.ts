@@ -4,17 +4,16 @@ import { Observable } from 'rxjs';
 
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Datasource } from '../model/datasource';
+import { environment } from '../../environments/environment';
 
-
-import { Batch } from './batch';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BatchService implements OnInit{
+export class DatasourceService {
 
   //here usually goes real server adress, this is just a mock 
-  private apiServer = "http://localhost:9000";
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -23,33 +22,15 @@ export class BatchService implements OnInit{
 
   constructor(private httpClient: HttpClient) { }
 
-  ngOnInit(){}
-
-  getAll(): Observable<Batch[]> {
-    return this.httpClient.get<Batch[]>(this.apiServer + '/batches')
+  getAll(): Observable<Datasource[]> {
+    return this.httpClient.get<Datasource[]>(environment.apiUrl + '/datasource')
       .pipe(
         catchError(this.errorHandler)
-      )
-  }
-
-  create(batch): Observable<Batch> {
-    return this.httpClient.post<Batch>(this.apiServer + '/batches', JSON.stringify(batch), this.httpOptions)
-    .pipe(
-      catchError(this.errorHandler)
-    )
-  }  
-
-  delete(id){
-    console.log("Delete request"); 
-    return this.httpClient.delete<Batch>(this.apiServer + '/batches/' + id, this.httpOptions)
-    .subscribe(
-      res => {alert("Delete succesful"); window.location.reload();},  
-      msg => console.error(`Error: ${msg.status} ${msg.statusText}`)  
-    )
+      );
   }
 
   errorHandler(error) {
-    console.log(error); 
+    console.log(error);
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
       // Get client-side error
