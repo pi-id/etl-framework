@@ -35,7 +35,12 @@ export class BatchService {
   }
 
   createBatch(batch): Observable<Batch> {
-    return this.httpClient.post<Batch>(environment.apiUrl + '/batches', JSON.stringify(batch), this.httpOptions)
+    console.log("service"); 
+    console.log(batch); 
+    delete batch.batch_sid;
+    console.log(batch);  
+    console.log(JSON.stringify(batch)); 
+    return this.httpClient.post<Batch>(environment.apiUrl + '/batches/', JSON.stringify(batch), this.httpOptions)
       .pipe(
         catchError(this.errorHandler)
       );

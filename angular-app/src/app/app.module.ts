@@ -32,6 +32,8 @@ import {ProgressBarModule} from 'primeng/progressbar';
 import {InputTextModule} from 'primeng/inputtext';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
+import {AddRowDirective} from "./directives/add-row.directive"
+
 
 
 @NgModule({
@@ -44,7 +46,8 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
     HomeComponent,
     LoginComponent,
     MainComponent,
-    RegisterComponent
+    RegisterComponent,
+    AddRowDirective
   ],
   imports: [
     BrowserModule,
