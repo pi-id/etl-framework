@@ -4,7 +4,6 @@ from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
 from . import views, converters
 
-# potrebno zbog negativnih primarnih ključeva
 register_converter(converters.NegativeIntConverter, 'negint')
 
 urlpatterns = [
@@ -22,5 +21,6 @@ urlpatterns = [
     path('attributes/', views.MetaAttributeList.as_view()),
     path('attributes/<negint:pk>/', views.MetaAttributeDetail.as_view()),
     path('datasources/', views.MetaDatasourceList.as_view()),
-    path('datasources/<negint:pk>/', views.MetaDatasourceDetail.as_view())
+    path('datasources/<negint:pk>/', views.MetaDatasourceDetail.as_view()),
+    path('values/', views.DomainValuesList.as_view())
 ]

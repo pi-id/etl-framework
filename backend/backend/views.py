@@ -5,6 +5,9 @@ from rest_framework.views import APIView
 from .serializers import *
 from .models import *
 from django.utils import timezone 
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class MetaBatchList(APIView): 
@@ -339,3 +342,15 @@ class MetaDatasourceDetail(generics.RetrieveUpdateDestroyAPIView):
         serializer.save(update_date =  timezone.now())
         return Response(serializer.data)
         
+        
+class DomainValuesList(APIView):
+    def get(self, request, format = None):
+        target_name = self.request.query_params.get('name', None)
+        target_sid = DomainDirectory.objects.all().filter(domain_directory_name=target_name).values('domain_directory_sid')
+        target_sid = target_sid[0]['domain_directory_sid']
+        domainvalues_list = DomainValue.objects.all().filter(domain_directory_sid=target_sid)
+        serializer = DomainValueSerializer(domainvalues_list, many=True)
+        try:
+            return Response(serializer.data)
+        except:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
