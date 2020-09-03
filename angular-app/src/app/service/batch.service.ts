@@ -28,14 +28,19 @@ export class BatchService {
   constructor(private httpClient: HttpClient) { }
 
   getAll(): Observable<Batch[]> {
-    return this.httpClient.get<Batch[]>(environment.apiUrl + '/batches')
+    return this.httpClient.get<Batch[]>(environment.apiUrl + '/batches/')
       .pipe(
         catchError(this.errorHandler)
       );
   }
 
   createBatch(batch): Observable<Batch> {
-    return this.httpClient.post<Batch>(environment.apiUrl + '/batches', JSON.stringify(batch), this.httpOptions)
+    console.log("service"); 
+    console.log(batch); 
+    delete batch.batch_sid;
+    console.log(batch);  
+    console.log(JSON.stringify(batch)); 
+    return this.httpClient.post<Batch>(environment.apiUrl + '/batches/', JSON.stringify(batch), this.httpOptions)
       .pipe(
         catchError(this.errorHandler)
       );

@@ -1,23 +1,23 @@
-export interface Batch {
-    batch_sid : number; 
-    datasource_sid? : number; 
-    batch_id? : string; 
-    batch_name? : string; 
-    batch_desc? : string; 
-    batch_type? : string; 
-    batch_status? : string; 
-    server_name? : string; 
-    source_database_name? : string; 
-    destination_database_name? : string; 
-    ssis_package_name? : string; 
-    job_name? : string; 
-    job_step_name? : string; 
-    job_scheduled? : boolean;
-    dashboard_type? : string; 
-    use_mail_status? : boolean; 
-    insert_date? : Date; 
-    insert_user? : string; 
-    update_date? : Date; 
-    update_user? : string; 
-    datasource_name? : string; 
+export class Batch {
+    batch_sid; 
+    datasource_sid?; 
+    batch_id?; 
+    batch_name?; 
+    batch_desc?; 
+    batch_type?; 
+    batch_status?; 
+    server_name?; 
+    source_database_name?; 
+    destination_database_name?; 
+    ssis_package_name?; 
+    job_name?; 
+    job_step_name?; 
+    job_scheduled?;
+    dashboard_type?; 
+    use_mail_status?; 
+    insert_date?; 
+    insert_user?; 
+    update_date?; 
+    update_user?; 
+    datasource_name?; 
 }

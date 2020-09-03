@@ -23,7 +23,7 @@ export class DatasourceService {
   constructor(private httpClient: HttpClient) { }
 
   getAll(): Observable<Datasource[]> {
-    return this.httpClient.get<Datasource[]>(environment.apiUrl + '/datasource')
+    return this.httpClient.get<Datasource[]>(environment.apiUrl + '/datasources/')
       .pipe(
         catchError(this.errorHandler)
       );

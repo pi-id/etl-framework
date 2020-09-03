@@ -6,6 +6,8 @@ import { MessageService } from 'primeng/api';
 import { SelectItem } from 'primeng/api';
 import {Datasource} from '../model/datasource'; 
 import {DatasourceService} from '../service/datasource.service'; 
+import { Table } from 'primeng/table';
+import { identifierModuleUrl } from '@angular/compiler';
 
 @Component({
   selector: 'app-batch',
@@ -23,6 +25,7 @@ export class BatchComponent implements OnInit {
   submitted: boolean;
   options: SelectItem[]; 
   clonedBatches: { [s: number]: Batch; } = {};
+  loading: boolean; 
 
   constructor(private batchService: BatchService, 
     private messageService: MessageService, 
@@ -31,6 +34,7 @@ export class BatchComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loading = true; 
     this.loadBatches();
     this.loadDataSource();  
   }
@@ -42,6 +46,7 @@ export class BatchComponent implements OnInit {
         this.datasources = data;
         console.log(data);
         this.options = this.datasources.map((data) => ({label: data.datasource_name, value: data.datasource_sid})); 
+        this.loading = false; 
       },
       error => {
         console.log(error);
@@ -61,6 +66,32 @@ export class BatchComponent implements OnInit {
         });
   }
 
+  addNewRowClick() {
+    const empty = {
+      batch_sid: 0,
+      datasource_sid: '',
+      batch_id: '',
+      batch_name: '',
+      batch_desc: '',
+      batch_type: '',
+      batch_status: '',
+      server_name: '',
+      source_database_name: '',
+      destination_database_name: '',
+      ssis_package_name: '',
+      job_name: '',
+      job_step_name: '',
+      job_scheduled: false,
+      dashboard_type: '',
+      use_mail_status: false,
+      insert_date: null,
+      insert_user: '',
+      update_date: null,
+      update_user: ''
+    };
+    return empty;
+  }
+
   deleteBatch(batch: Batch) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete ' + batch.batch_name + '?',
@@ -69,12 +100,10 @@ export class BatchComponent implements OnInit {
       accept: () => {
         this.batchService.deleteBatch(batch.batch_sid).subscribe(
           response => {
-            console.log("response");
             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Batch deleted', life: 3000 });
             this.loadBatches();
           },
           error => {
-            console.log(error);
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Batch couldn\'t be deleted', life: 3000 });
 
           });
@@ -87,7 +116,27 @@ export class BatchComponent implements OnInit {
     this.clonedBatches[batch.batch_sid] = {...batch};
   }
 
-  onRowEditSave(batch: Batch, index: number){
+  onRowEditSave(batch: Batch, index: number, table:Table){
+
+    if(batch.batch_sid == 0){
+      console.log("Adding new batch");  
+      console.log(batch); 
+      batch.batch_sid = null; 
+      console.log(batch); 
+      this.batchService.createBatch(batch).subscribe(
+        response => {
+          console.log("response");
+          delete this.clonedBatches[batch.batch_sid];
+          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Batch added!', life: 3000 });
+          this.loadBatches();
+        },
+        error => {
+          console.log(error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Batch couldn\'t be added!', life: 3000 });
+          this.onRowEditCancel(batch, index, table); 
+        }
+      );
+    }else{
     console.log('On row edit save');
       this.batchService.updateBatch(batch).subscribe(
         response => {
@@ -99,20 +148,24 @@ export class BatchComponent implements OnInit {
         error => {
           console.log(error);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Batch couldn\'t be updated!', life: 3000 });
-          this.onRowEditCancel(batch, index); 
+          this.onRowEditCancel(batch, index, table); 
         });
+      }
   }
 
-  onRowEditCancel(batch: Batch, index: number) {
+  onRowEditCancel(batch: Batch, index: number, table: Table) {
     console.log('On row edit cancel');
-    this.batches[index] = this.clonedBatches[batch.batch_sid]; 
-    delete this.batches[batch.batch_sid]; 
+    console.log(batch.batch_sid); 
+    if (batch.batch_sid == 0){
+      console.log("deleting non added batch"); 
+      delete this.batches[index]; 
+      table.value.splice(index, 1); 
+    }
+    else{
+      this.batches[index] = this.clonedBatches[batch.batch_sid];
+    }
+    delete this.clonedBatches[batch.batch_sid]; 
   }
-
-  add(){
-    this.batches.push();
-    this.onRowEditInit(this.batches[this.batches.length - 1]);
-}
 }
 
 

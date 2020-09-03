@@ -2,15 +2,23 @@
 <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
 
 <div class="card">
-    <p-table styleClass="p-datatable-responsive-demo" [scrollable]="false" [value]="batches" [autoLayout]="true"
+    <p-table #dt styleClass="p-datatable-responsive-demo" [scrollable]="false" [value]="batches" [autoLayout]="true"
         dataKey="batch_sid" editMode="row" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-        [rowsPerPageOptions]="[5,10,15]">
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[5,10,15]"
+        [globalFilterFields]="['batch_sid','datasource_name','batch_id','batch_name', 'batch_desc', 'input_user',
+        'batch_type', 'batch_status', 'server_name', 'source_database_name', 'destination_database_name',
+        'ssis_package_name', 'job_name']">
         <ng-template pTemplate="caption">
             <div class="p-d-flex p-ai-center p-jc-between">
-               <h3 style="text-align: center;"><b>BATCH TABLE</b></h3> 
-               <div style="text-align:right">
-                    <button type="button" pButton class="p-button-danger" icon="fa fa-plus" (click)="add()" label="Add"></button>
+                <h3 style="text-align: center;"><b>BATCH TABLE</b></h3>
+                <div style="text-align:right">
+                    <button pButton pAddRow [table]="dt" [newRow]="addNewRowClick()" label="New" icon="pi pi-plus"
+                        class="p-button-danger p-mr-2"></button>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                            placeholder="Global Search" />
+                    </span>
                 </div>
             </div>
 
@@ -48,14 +56,14 @@
                     <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
                         (click)="onRowEditInit(batch)" class="p-button-rounded p-button-text"></button>
                     <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
-                        (click)="onRowEditSave(batch, ri)"
+                        (click)="onRowEditSave(batch, ri, dt)"
                         class="p-button-rounded p-button-text p-button-success p-mr-2"></button>
                     <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
-                        (click)="onRowEditCancel(batch, ri)"
+                        (click)="onRowEditCancel(batch, ri, dt)"
                         class="p-button-rounded p-button-text p-button-danger"></button>
                 </td>
-                <td> <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                        (click)="deleteBatch(batch)"></button></td>
+                <td> <button *ngIf="!editing" pButton pRipple icon="pi pi-trash"
+                        class="p-button-rounded p-button-danger" (click)="deleteBatch(batch)"></button></td>
                 <td>
                     {{batch.batch_sid}}
                 </td>
@@ -150,7 +158,6 @@
                 </td>
 
                 <td>
-
                     <p-cellEditor>
                         <ng-template pTemplate="input">
                             <input pInputText type="text" [(ngModel)]="batch.destination_database_name">
@@ -185,7 +192,6 @@
                 </td>
 
                 <td>
-
                     <p-cellEditor>
                         <ng-template pTemplate="input">
                             <input pInputText type="text" [(ngModel)]="batch.job_step_name">
@@ -209,7 +215,6 @@
 
                 </td>
                 <td>
-
                     <p-cellEditor>
                         <ng-template pTemplate="input">
                             <input pInputText type="text" [(ngModel)]="batch.dashboard_type">
@@ -218,11 +223,9 @@
                             {{batch.dashboard_type}}
                         </ng-template>
                     </p-cellEditor>
-
                 </td>
 
                 <td>
-
                     <p-cellEditor>
                         <ng-template pTemplate="input">
                             <input pInputText type="text" [(ngModel)]="batch.use_mail_status">
@@ -231,23 +234,13 @@
                             {{batch.use_mail_status}}
                         </ng-template>
                     </p-cellEditor>
-
                 </td>
 
                 <td>
-
-                    <p-cellEditor>
-                        <ng-template pTemplate="input">
-                            <input pInputText type="text" [(ngModel)]="batch.insert_date">
-                        </ng-template>
-                        <ng-template pTemplate="output">
-                            {{batch.insert_date}}
-                        </ng-template>
-                    </p-cellEditor>
+                    {{batch.insert_date}}
                 </td>
 
                 <td>
-
                     <p-cellEditor>
                         <ng-template pTemplate="input">
                             <input pInputText type="text" [(ngModel)]="batch.insert_user">
@@ -259,20 +252,10 @@
                 </td>
 
                 <td>
-
-                    <p-cellEditor>
-                        <ng-template pTemplate="input">
-                            <input pInputText type="text" [(ngModel)]="batch.update_date">
-                        </ng-template>
-                        <ng-template pTemplate="output">
-                            {{batch.update_date}}
-                        </ng-template>
-                    </p-cellEditor>
-
+                    {{batch.update_date}}
                 </td>
 
                 <td>
-
                     <p-cellEditor>
                         <ng-template pTemplate="input">
                             <input pInputText type="text" [(ngModel)]="batch.update_user">
@@ -283,6 +266,7 @@
                     </p-cellEditor>
                 </td>
             </tr>
+
         </ng-template>
         <ng-template pTemplate="summary">
             <div class="p-d-flex p-ai-center p-jc-between">
