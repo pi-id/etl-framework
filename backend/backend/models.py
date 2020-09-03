@@ -587,3 +587,39 @@ class DependencyTaskRecursion(models.Model):
     
     class Meta:
         managed = False
+        
+
+class DomainDirectory(models.Model):
+    domain_directory_sid = models.AutoField(primary_key=True)
+    datasource_sid = models.ForeignKey('MetaDatasource', models.DO_NOTHING, db_column='datasource_sid', blank=True, null=True)
+    domain_directory_id = models.CharField(max_length=30)
+    domain_directory_name = models.CharField(max_length=255)
+    domain_directory_desc = models.CharField(max_length=4000, blank=True, null=True)
+    domain_directory_type = models.CharField(max_length=30, blank=True, null=True)
+    domain_directory_status = models.CharField(max_length=30)
+    insert_date = models.DateTimeField()
+    insert_user = models.CharField(max_length=255)
+    update_date = models.DateTimeField(blank=True, null=True)
+    update_user = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'domain_directory'
+
+
+class DomainValue(models.Model):
+    domain_value_sid = models.AutoField(primary_key=True)
+    domain_directory_sid = models.ForeignKey(DomainDirectory, models.DO_NOTHING, db_column='domain_directory_sid', blank=True, null=True)
+    domain_value_value = models.CharField(max_length=30)
+    domain_value_desc = models.CharField(max_length=2000, blank=True, null=True)
+    domain_value_data_type = models.CharField(max_length=30, blank=True, null=True)
+    domain_value_status = models.CharField(max_length=30)
+    insert_date = models.DateTimeField()
+    insert_user = models.CharField(max_length=255)
+    update_date = models.DateTimeField(blank=True, null=True)
+    update_user = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'domain_value'
+        

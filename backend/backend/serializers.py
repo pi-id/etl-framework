@@ -72,3 +72,9 @@ class DependencyTaskRecursionSerializer(serializers.ModelSerializer):
     class Meta:
         model = DependencyTaskRecursion
         fields = "__all__"
+        
+        
+class DomainValueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DomainValue
+        fields = ['domain_value_value']
