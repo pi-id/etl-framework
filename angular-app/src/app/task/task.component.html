@@ -1,59 +1,337 @@
-<!-- Editable table -->
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
 <div class="card">
-    <h3 class="card-header text-center font-weight-bold text-uppercase py-4">TASK TABLE</h3>
-    <div class="card-body">
-      <div id="table" class="table-editable">
-        <span class="table-add float-right mb-3 mr-2">
-          <a class="text-success" (click)="add()">
-            <mdb-icon fas icon="plus" size="2x"></mdb-icon>
-          </a>
-        </span>
-        <table class="table table-bordered table-responsive-md table-striped text-center">
-          <tr>
-            <th class="text-center">Person Name</th>
-            <th class="text-center">Age</th>
-            <th class="text-center">Company Name</th>
-            <th class="text-center">Country</th>
-            <th class="text-center">City</th>
-            <th class="text-center">Sort</th>
-            <th class="text-center">Delete</th>
-          </tr>
-          <tr *ngFor="let person of personList; let id = index">
-            <td>
-              <span (keyup)="changeValue(id, 'name', $event)" (blur)="updateList(id, 'name', $event)" contenteditable="true">{{person.name}}</span>
-            </td>
-            <td>
-              <span contenteditable="true" (keyup)="changeValue(id, 'age', $event)" (blur)="updateList(id, 'age', $event)">{{person.age}}</span>
-            </td>
-            <td>
-              <span contenteditable="true" (keyup)="changeValue(id, 'companyName', $event)" (blur)="updateList(id, 'companyName', $event)">{{person.companyName}}</span>
-            </td>
-            <td>
-              <span contenteditable="true" (keyup)="changeValue(id, 'country', $event)" (blur)="updateList(id, 'country', $event)">{{person.country}}</span>
-            </td>
-            <td>
-              <span contenteditable="true" (keyup)="changeValue(id, 'city', $event)" (blur)="updateList(id, 'city', $event)">{{person.city}}</span>
-            </td>
-            <td>
-              <span class="table-up">
-                <a class="indigo-text">
-                  <mdb-icon fas icon="long-arrow-alt-up"></mdb-icon>
-                </a>
-              </span>
-              <span class="table-down">
-                <a class="indigo-text">
-                  <mdb-icon fas icon="long-arrow-alt-down"></mdb-icon>
-                </a>
-              </span>
-            </td>
-            <td>
-              <span class="table-remove">
-                <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0" (click)="remove(id)">Delete</button>
-              </span>
-            </td>
-          </tr>
-        </table>
+  <p-table #dt styleClass="p-datatable-responsive-demo" [scrollable]="false" [value]="tasks" [autoLayout]="true"
+    dataKey="task_sid" [loading]="loading" editMode="row" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[5,10,15]"
+    [filterDelay]="0" [globalFilterFields]="['task_sid','batch_sid','task_type','task_id', 'dependent_task_sid', 'task_name',
+        'task_desc', 'task_status', 'dq_check_type_sid', 'ssis_package_guid', 'ssis_package_name',
+        'ssis_package_version', 'ssis_package_path', 'ssis_package_file_name', 'server_name', 'source_database_name', 'destination_database_name',
+        'insert_date', 'insert_user', 'update_date', 'update_user', 'task_order', 'batch_name']">
+    <ng-template pTemplate="caption">
+      <div class="p-d-flex p-ai-center p-jc-between">
+        <h3 class="text-align: left">Choose batch</h3>
+  <p-multiSelect [options]="batchesOptions" [(ngModel)]="selectedBatches"></p-multiSelect>
+        <h3 style="text-align: center;"><b>TASK TABLE</b></h3>
+        <div style="text-align:right">
+          <button pButton pAddRow [table]="dt" [newRow]="addNewRowClick()" label="New" icon="pi pi-plus"
+            class="p-button-danger p-mr-2"></button>
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+              placeholder="Global Search" />
+          </span>
+        </div>
       </div>
-    </div>
-  </div>
-  <!-- Editable table -->
+
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Edit</th>
+        <th>Delete</th>
+        <th pSortableColumn="task_sid">task_sid <p-sortIcon field="task_sid"></p-sortIcon>
+        </th>
+        <th pSortableColumn="batch_name">batch_name <p-sortIcon field="batch_name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="task_type">task_type<p-sortIcon field="task_type"></p-sortIcon>
+        </th>
+        <th pSortableColumn="task_id">task_id<p-sortIcon field="task_id"></p-sortIcon>
+        </th>
+        <th pSortableColumn="dependent_task_sid">dependent_task_sid<p-sortIcon field="dependent_task_id"></p-sortIcon>
+        <th pSortableColumn="task_name">task_name<p-sortIcon field="task_name"></p-sortIcon>
+        </th>
+        <th>task_desc</th>
+        <th pSortableColumn="task_status">task_status<p-sortIcon field="task_status"></p-sortIcon>
+        </th>
+        <th pSortableColumn="dq_check_type_sid">dq_check_type_sid<p-sortIcon field="dq_check_type_sid"></p-sortIcon>
+        </th>
+        <th pSortableColumn="ssis_package_guid">ssis_package_guid<p-sortIcon field="ssis_package_guid"></p-sortIcon>
+        </th>
+        <th pSortableColumn="ssis_package_name">ssis_package_name<p-sortIcon field="ssis_package_name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="ssis_package_version">ssis_package_version<p-sortIcon field="ssis_package_version">
+          </p-sortIcon>
+        </th>
+        <th pSortableColumn="ssis_package_path">ssis_package_path <p-sortIcon field="ssis_package_path"></p-sortIcon>
+        </th>
+        <th pSortableColumn="ssis_package_file_name">ssis_package_file_name <p-sortIcon field="ssis_package_file_name">
+          </p-sortIcon>
+        </th>
+        <th pSortableColumn="server_name">server_name <p-sortIcon field="server_name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="source_database_name">source_database_name<p-sortIcon field="source_database_name">
+          </p-sortIcon>
+        </th>
+        <th pSortableColumn="destination_database_name">destination_database_name <p-sortIcon
+            field="destination_database_name"></p-sortIcon>
+        </th>
+        <th>include in report</th>
+        <th>external_end_task</th>
+        <th pSortableColumn="insert_date">insert_date<p-sortIcon field="insert_date"></p-sortIcon>
+        </th>
+        <th pSortableColumn="update_date">insert_user<p-sortIcon field="insert_user"></p-sortIcon>
+        </th>
+        <th pSortableColumn="update_date">update_date<p-sortIcon field="update_date"></p-sortIcon>
+        </th>
+        <th pSortableColumn="update_user">update_user<p-sortIcon field="update_user"></p-sortIcon>
+        </th>
+        <th pSortableColumn="task_order">task_order<p-sortIcon field="task_order"></p-sortIcon>
+        </th>
+        <th style="width:8rem"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-task let-editing="editing" let-ri="rowIndex">
+      <tr [pEditableRow]="task">
+        <td style="text-align:center">
+          <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
+            (click)="onRowEditInit(task)" class="p-button-rounded p-button-text"></button>
+          <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
+            (click)="onRowEditSave(task, ri, dt)"
+            class="p-button-rounded p-button-text p-button-success p-mr-2"></button>
+          <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
+            (click)="onRowEditCancel(task, ri, dt)" class="p-button-rounded p-button-text p-button-danger"></button>
+        </td>
+        <td> <button *ngIf="!editing" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+            (click)="deleteTask(task)"></button></td>
+        <td>
+          {{task.task_sid}}
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-dropdown [options]="batchesOptions" [virtualScroll]="true" [(ngModel)]="task.batch_sid" [filter]="true"
+                (onChange)="batch.datasource_sid = $event.value" [style]="{'width':'100%'}" placeholder="Select batch">
+              </p-dropdown>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.batch_name}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.task_type" required="true">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.task_type}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.task_id">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.task_id}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.dependent_task_sid">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.dependent_task_sid}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.task_name" required="true">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.task_name}}
+            </ng-template>
+          </p-cellEditor>
+
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.task_desc">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.task_desc}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.task_status">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.task_status}}
+            </ng-template>
+          </p-cellEditor>
+
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.dq_check_type_sid">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.dq_check_type_sid}}
+            </ng-template>
+          </p-cellEditor>
+
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.ssis_package_guid">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.ssis_package_guid}}
+            </ng-template>
+          </p-cellEditor>
+
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.ssis_package_name">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.ssis_package_name}}
+            </ng-template>
+          </p-cellEditor>
+
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.ssis_package_version">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.ssis_package_version}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.ssis_package_path">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.ssis_package_path}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.ssis_package_file_name">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.ssis_package_file_name}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.server_name">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.server_name}}
+            </ng-template>
+          </p-cellEditor>
+
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.source_database_name">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.source_database_name}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.destination_database_name">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.destination_database_name}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.include_in_report">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.include_in_report}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.external_end_task">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.external_end_task}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          {{task.insert_date}}
+        </td>
+
+        <td>
+          {{task.insert_user}}
+        </td>
+
+        <td>
+          {{task.update_date}}
+        </td>
+
+        <td>
+          {{task.update_user}}
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.task_order">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.task_order}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="p-d-flex p-ai-center p-jc-between">
+        In total there are {{tasks ? tasks.length : 0 }} tasks.
+      </div>
+    </ng-template>
+  </p-table>
+</div>

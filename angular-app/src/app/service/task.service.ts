@@ -1,16 +1,16 @@
-import { Injectable, OnInit } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Injectable} from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Batch } from '../model/batch';
+import { Task } from '../model/task';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BatchService {
+export class TaskService {
  
   httpOptions = {
     headers: new HttpHeaders({
@@ -20,26 +20,26 @@ export class BatchService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getAll(): Observable<Batch[]> {
-    return this.httpClient.get<Batch[]>(environment.apiUrl + '/batches/')
+  getAll(): Observable<Task[]> {
+    return this.httpClient.get<Task[]>(environment.apiUrl + '/tasks/')
       .pipe(
         catchError(this.errorHandler)
       );
   }
 
-  createBatch(batch): Observable<Batch> {
-    return this.httpClient.post<Batch>(environment.apiUrl + '/batches/', JSON.stringify(batch), this.httpOptions)
+  createTask(task): Observable<Task> {
+    return this.httpClient.post<Task>(environment.apiUrl + '/tasks/', JSON.stringify(task), this.httpOptions)
       .pipe(
         catchError(this.errorHandler)
       );
   }
 
-  updateBatch(batch: Batch): Observable<Batch> {
-    return this.httpClient.put<Batch>(environment.apiUrl +'/batches/' + batch.batch_sid + '/', batch);
+  updateTask(task: Task): Observable<Task> {
+    return this.httpClient.put<Task>(environment.apiUrl +'/tasks/' + task.task_sid + '/', task);
   }
 
-  deleteBatch(id) {
-    return this.httpClient.delete<Batch>(environment.apiUrl + '/batches/' + id, this.httpOptions)
+  deleteTask(id) {
+    return this.httpClient.delete<Task>(environment.apiUrl + '/tasks/' + id + '/', this.httpOptions)
       .pipe(
         catchError(this.errorHandler)
       );
