@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { BatchService } from '../service/batch.service';
-import { Batch } from '../model/batch';
+import { Batch } from '../model/batch.model';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { SelectItem } from 'primeng/api';
-import {Datasource} from '../model/datasource'; 
+import {Datasource} from '../model/datasource.model'; 
 import {DatasourceService} from '../service/datasource.service'; 
+import { DomainService } from '../service/domain.service';
 import { Table } from 'primeng/table';
 
 @Component({
@@ -23,18 +24,22 @@ export class BatchComponent implements OnInit {
   selectedBatches: Batch[];
   submitted: boolean;
   datasourcesOptions: SelectItem[]; 
+  domain_values: SelectItem[]; 
   clonedBatches: { [s: number]: Batch; } = {};
   loading: boolean = true; 
+  table_name: string = "batch";
 
   constructor(private batchService: BatchService, 
     private messageService: MessageService, 
     private confirmationService: ConfirmationService,
-    private datasourceService: DatasourceService) {
+    private datasourceService: DatasourceService,
+    private domainService: DomainService) {
   }
 
   ngOnInit() {
     this.loadBatches();
     this.loadDataSource();  
+    this.loadDomainValues();
   }
 
   loadBatches(): void {
@@ -63,6 +68,21 @@ export class BatchComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error occured while loading data!', life: 3000 });
       }
     );
+  }
+
+  loadDomainValues(): void {
+    this.domainService.getAll(this.table_name)
+      .subscribe(
+        data => {
+          this.domain_values = [];
+          for (let i = 0; i < data.length; i++) {
+            this.domain_values.push({ label: data[i].domain_value_value, value: data[i].domain_value_value })
+          }
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error occured while loading data!', life: 3000 });
+        }
+      );
   }
 
   deleteBatch(batch: Batch) {

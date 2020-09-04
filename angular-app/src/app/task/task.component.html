@@ -3,7 +3,7 @@
 
 <div class="card">
   <p-table #dt styleClass="p-datatable-responsive-demo" [scrollable]="false" [value]="tasks" [autoLayout]="true"
-    dataKey="task_sid" [loading]="loading" editMode="row" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+    dataKey="task_sid" [rowHover]="true" [loading]="loading" editMode="row" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[5,10,15]"
     [filterDelay]="0" [globalFilterFields]="['task_sid','batch_sid','task_type','task_id', 'dependent_task_sid', 'task_name',
         'task_desc', 'task_status', 'dq_check_type_sid', 'ssis_package_guid', 'ssis_package_name',
@@ -11,8 +11,9 @@
         'insert_date', 'insert_user', 'update_date', 'update_user', 'task_order', 'batch_name']">
     <ng-template pTemplate="caption">
       <div class="p-d-flex p-ai-center p-jc-between">
-        <h3 class="text-align: left">Choose batch</h3>
-  <p-multiSelect [options]="batchesOptions" [(ngModel)]="selectedBatches"></p-multiSelect>
+        <h3 class="text-align: left"><b>Choose batch</b></h3>
+  <p-multiSelect [options]="batchesOptions" [(ngModel)]="selectedBatches"
+  (onChange)="selectBatch(dt)"></p-multiSelect>
         <h3 style="text-align: center;"><b>TASK TABLE</b></h3>
         <div style="text-align:right">
           <button pButton pAddRow [table]="dt" [newRow]="addNewRowClick()" label="New" icon="pi pi-plus"
@@ -102,7 +103,7 @@
           <p-cellEditor>
             <ng-template pTemplate="input">
               <p-dropdown [options]="batchesOptions" [virtualScroll]="true" [(ngModel)]="task.batch_sid" [filter]="true"
-                (onChange)="batch.datasource_sid = $event.value" [style]="{'width':'100%'}" placeholder="Select batch">
+               [style]="{'width':'100%'}" placeholder="Select batch">
               </p-dropdown>
             </ng-template>
             <ng-template pTemplate="output">
@@ -170,14 +171,16 @@
         <td>
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <input pInputText type="text" [(ngModel)]="task.task_status">
+              <p-dropdown [options]="domain_values" [virtualScroll]="true" [(ngModel)]="task.task_status"
+               [style]="{'width':'100%'}" placeholder="Select status">
+              </p-dropdown>
             </ng-template>
             <ng-template pTemplate="output">
               {{task.task_status}}
             </ng-template>
           </p-cellEditor>
-
         </td>
+
         <td>
           <p-cellEditor>
             <ng-template pTemplate="input">

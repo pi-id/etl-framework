@@ -1,10 +1,10 @@
-import { Injectable, OnInit } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Datasource } from '../model/datasource';
+import { Datasource } from '../model/datasource.model';
 import { environment } from '../../environments/environment';
 
 

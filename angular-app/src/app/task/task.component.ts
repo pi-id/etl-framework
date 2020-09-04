@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BatchService } from '../service/batch.service';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
-import {TaskService} from '../service/task.service';
+import { TaskService } from '../service/task.service';
+import { DomainService } from '../service/domain.service';
 
-import { Task } from '../model/task';
-import { Batch } from '../model/batch';
+import { Task } from '../model/task.model';
+import { Batch } from '../model/batch.model';
+
 
 import { SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { NumberFormatStyle } from '@angular/common';
+
 
 @Component({
   selector: 'app-task',
@@ -19,25 +21,33 @@ import { NumberFormatStyle } from '@angular/common';
 })
 
 export class TaskComponent implements OnInit {
+  @ViewChild('dt', { static: false }) dt: any;
   tasks: Task[];
-  batches: Batch[]; 
+  allTasks: Task[]; 
+  batches: Batch[];
+  domain_values: SelectItem[]; 
   taskDialog: boolean;
   task: Task;
   selectedBatches: number[];
   submitted: boolean;
-  batchesOptions: SelectItem[]; 
+  batchesOptions: SelectItem[];
   clonedTasks: { [s: number]: Task; } = {};
-  loading: boolean = true; 
+  loading: boolean = true;
+  table_name: string = "task";
 
-  constructor(private batchService: BatchService, 
-    private messageService: MessageService, 
+
+  constructor(private batchService: BatchService,
+    private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private taskService: TaskService) {
+    private taskService: TaskService,
+    private domainService: DomainService) {
   }
 
   ngOnInit() {
+    this.loading = true; 
     this.loadTasks();
-    this.loadBatches();  
+    this.loadBatches();
+    this.loadDomainValues();
   }
 
   loadTasks(): void {
@@ -45,27 +55,44 @@ export class TaskComponent implements OnInit {
       .subscribe(
         data => {
           this.tasks = data;
+          this.allTasks = data; 
+          this.loading = false;
         },
         error => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error occured while loading data!', life: 3000 });
         });
   }
 
-  loadBatches(): void{
+  loadBatches(): void {
     this.batchService.getAll()
-    .subscribe(
-      data => {
-        this.batches = data;
-        this.batchesOptions = []; 
-        for(let i = 0; i < data.length; i++){
-          this.batchesOptions.push({label: data[i].batch_name, value: data[i].batch_sid})
+      .subscribe(
+        data => {
+          this.batches = data;
+          this.batchesOptions = [];
+          for (let i = 0; i < data.length; i++) {
+            this.batchesOptions.push({ label: data[i].batch_name, value: data[i].batch_sid })
+          }
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error occured while loading data!', life: 3000 });
         }
-        this.loading = false; 
-      },
-      error => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error occured while loading data!', life: 3000 });
-      }
-    );
+      );
+  }
+
+  
+  loadDomainValues(): void {
+    this.domainService.getAll(this.table_name)
+      .subscribe(
+        data => {
+          this.domain_values = [];
+          for (let i = 0; i < data.length; i++) {
+            this.domain_values.push({ label: data[i].domain_value_value, value: data[i].domain_value_value })
+          }
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error occured while loading data!', life: 3000 });
+        }
+      );
   }
 
   deleteTask(task: Task) {
@@ -88,13 +115,13 @@ export class TaskComponent implements OnInit {
   }
 
   onRowEditInit(task: Task) {
-    this.clonedTasks[task.task_sid] = {...task};
+    this.clonedTasks[task.task_sid] = { ...task };
   }
 
-  onRowEditSave(task: Task, index: number, table:Table){
+  onRowEditSave(task: Task, index: number, table: Table) {
 
-    if(task.task_sid == 0){
-      let copy = {...task}; 
+    if (task.task_sid == 0) {
+      let copy = { ...task };
       delete task.task_sid;
       this.taskService.createTask(task).subscribe(
         response => {
@@ -104,36 +131,54 @@ export class TaskComponent implements OnInit {
         },
         error => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Task couldn\'t be added!', life: 3000 });
-          this.onRowEditCancel(copy, index, table); 
+          this.onRowEditCancel(copy, index, table);
         }
       );
-    }else{
+    } else {
       this.taskService.updateTask(task).subscribe(
         response => {
           delete this.clonedTasks[task.task_sid];
           this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Task updated!', life: 3000 });
-          this.loadTasks();
+          this.selectBatch(table); 
         },
         error => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Task couldn\'t be updated!', life: 3000 });
-          this.onRowEditCancel(task, index, table); 
+          this.onRowEditCancel(task, index, table);
         });
-      }
+    }
   }
 
   onRowEditCancel(task: Task, index: number, table: Table) {
-    if (task.task_sid == 0){
-      delete this.tasks[index]; 
-      table.value.splice(index, 1); 
+    if (task.task_sid == 0) {
+      delete this.tasks[index];
+      table.value.splice(index, 1);
     }
-    else{
+    else {
       this.tasks[index] = this.clonedTasks[task.task_sid];
     }
-    delete this.clonedTasks[task.task_sid]; 
+    delete this.clonedTasks[task.task_sid];
   }
 
-  selectTask(){
-    console.log(this.selectedBatches); 
+  selectBatch(table: Table) {
+    if (this.selectedBatches.length == 0 || 
+      this.selectedBatches.length == this.batches.length) {
+      this.tasks = this.allTasks; 
+    } else {
+      this.dt.first = 0; 
+      this.loading = true; 
+      this.tasks = []; 
+      for (let i = 0; i < this.selectedBatches.length; i++) {
+        this.taskService.getTaskByBatchId(this.selectedBatches[i])
+          .subscribe(
+            data => {
+              this.tasks = this.tasks.concat(data); 
+              error => {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error occured while loading data!', life: 3000 });
+              }
+            });
+        this.loading = false; 
+      }
+    }
   }
 
   addNewRowClick() {
