@@ -22,5 +22,6 @@ export interface Task {
     insert_user? : string; 
     update_date? : Date;
     update_user? : string; 
-    TASK_ORDER? : number;  
+    task_order? : number;
+    batch_name? : string;   
 }

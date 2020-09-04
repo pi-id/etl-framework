@@ -7,7 +7,6 @@ import { SelectItem } from 'primeng/api';
 import {Datasource} from '../model/datasource'; 
 import {DatasourceService} from '../service/datasource.service'; 
 import { Table } from 'primeng/table';
-import { identifierModuleUrl } from '@angular/compiler';
 
 @Component({
   selector: 'app-batch',
@@ -23,9 +22,9 @@ export class BatchComponent implements OnInit {
   batch: Batch;
   selectedBatches: Batch[];
   submitted: boolean;
-  options: SelectItem[]; 
+  datasourcesOptions: SelectItem[]; 
   clonedBatches: { [s: number]: Batch; } = {};
-  loading: boolean; 
+  loading: boolean = true; 
 
   constructor(private batchService: BatchService, 
     private messageService: MessageService, 
@@ -34,24 +33,8 @@ export class BatchComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loading = true; 
     this.loadBatches();
     this.loadDataSource();  
-  }
-
-  loadDataSource(): void{
-    this.datasourceService.getAll()
-    .subscribe(
-      data => {
-        this.datasources = data;
-        console.log(data);
-        this.options = this.datasources.map((data) => ({label: data.datasource_name, value: data.datasource_sid})); 
-        this.loading = false; 
-      },
-      error => {
-        console.log(error);
-      }
-    );
   }
 
   loadBatches(): void {
@@ -59,11 +42,91 @@ export class BatchComponent implements OnInit {
       .subscribe(
         data => {
           this.batches = data;
-          console.log(data);
         },
         error => {
-          console.log(error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error occured while loading data!', life: 3000 });
         });
+  }
+
+  loadDataSource(): void{
+    this.datasourceService.getAll()
+    .subscribe(
+      data => {
+        this.datasources = data;
+        this.datasourcesOptions = []; 
+        for(let i = 0; i < data.length; i++){
+          this.datasourcesOptions.push({label: data[i].datasource_name, value: data[i].datasource_sid})
+        }
+        this.loading = false; 
+      },
+      error => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error occured while loading data!', life: 3000 });
+      }
+    );
+  }
+
+  deleteBatch(batch: Batch) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete ' + batch.batch_name + '?',
+      header: 'Confirm',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.batchService.deleteBatch(batch.batch_sid).subscribe(
+          response => {
+            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Batch deleted', life: 3000 });
+            this.loadBatches();
+          },
+          error => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Batch couldn\'t be deleted', life: 3000 });
+
+          });
+      }
+    });
+  }
+
+  onRowEditInit(batch: Batch) {
+    this.clonedBatches[batch.batch_sid] = {...batch};
+  }
+
+  onRowEditSave(batch: Batch, index: number, table:Table){
+
+    if(batch.batch_sid == 0){
+      let copy = {...batch}; 
+      delete batch.batch_sid;
+      this.batchService.createBatch(batch).subscribe(
+        response => {
+          delete this.clonedBatches[copy.batch_sid];
+          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Batch added!', life: 3000 });
+          this.loadBatches();
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Batch couldn\'t be added!', life: 3000 });
+          this.onRowEditCancel(copy, index, table); 
+        }
+      );
+    }else{
+      this.batchService.updateBatch(batch).subscribe(
+        response => {
+          delete this.clonedBatches[batch.batch_sid];
+          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Batch updated!', life: 3000 });
+          this.loadBatches();
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Batch couldn\'t be updated!', life: 3000 });
+          this.onRowEditCancel(batch, index, table); 
+        });
+      }
+  }
+
+  onRowEditCancel(batch: Batch, index: number, table: Table) {
+    if (batch.batch_sid == 0){
+      delete this.batches[index]; 
+      table.value.splice(index, 1); 
+    }
+    else{
+      this.batches[index] = this.clonedBatches[batch.batch_sid];
+    }
+    delete this.clonedBatches[batch.batch_sid]; 
   }
 
   addNewRowClick() {
@@ -90,81 +153,6 @@ export class BatchComponent implements OnInit {
       update_user: ''
     };
     return empty;
-  }
-
-  deleteBatch(batch: Batch) {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to delete ' + batch.batch_name + '?',
-      header: 'Confirm',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.batchService.deleteBatch(batch.batch_sid).subscribe(
-          response => {
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Batch deleted', life: 3000 });
-            this.loadBatches();
-          },
-          error => {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Batch couldn\'t be deleted', life: 3000 });
-
-          });
-      }
-    });
-  }
-
-  onRowEditInit(batch: Batch) {
-    console.log('On row edit init');
-    this.clonedBatches[batch.batch_sid] = {...batch};
-  }
-
-  onRowEditSave(batch: Batch, index: number, table:Table){
-
-    if(batch.batch_sid == 0){
-      console.log("Adding new batch");  
-      console.log(batch); 
-      batch.batch_sid = null; 
-      console.log(batch); 
-      this.batchService.createBatch(batch).subscribe(
-        response => {
-          console.log("response");
-          delete this.clonedBatches[batch.batch_sid];
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Batch added!', life: 3000 });
-          this.loadBatches();
-        },
-        error => {
-          console.log(error);
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Batch couldn\'t be added!', life: 3000 });
-          this.onRowEditCancel(batch, index, table); 
-        }
-      );
-    }else{
-    console.log('On row edit save');
-      this.batchService.updateBatch(batch).subscribe(
-        response => {
-          console.log("response");
-          delete this.clonedBatches[batch.batch_sid];
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Batch updated!', life: 3000 });
-          this.loadBatches();
-        },
-        error => {
-          console.log(error);
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Batch couldn\'t be updated!', life: 3000 });
-          this.onRowEditCancel(batch, index, table); 
-        });
-      }
-  }
-
-  onRowEditCancel(batch: Batch, index: number, table: Table) {
-    console.log('On row edit cancel');
-    console.log(batch.batch_sid); 
-    if (batch.batch_sid == 0){
-      console.log("deleting non added batch"); 
-      delete this.batches[index]; 
-      table.value.splice(index, 1); 
-    }
-    else{
-      this.batches[index] = this.clonedBatches[batch.batch_sid];
-    }
-    delete this.clonedBatches[batch.batch_sid]; 
   }
 }
 

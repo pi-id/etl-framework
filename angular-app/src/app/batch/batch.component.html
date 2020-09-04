@@ -3,8 +3,9 @@
 
 <div class="card">
     <p-table #dt styleClass="p-datatable-responsive-demo" [scrollable]="false" [value]="batches" [autoLayout]="true"
-        dataKey="batch_sid" editMode="row" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+        dataKey="batch_sid" [loading]="loading" editMode="row" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[5,10,15]"
+        [filterDelay]="0"
         [globalFilterFields]="['batch_sid','datasource_name','batch_id','batch_name', 'batch_desc', 'input_user',
         'batch_type', 'batch_status', 'server_name', 'source_database_name', 'destination_database_name',
         'ssis_package_name', 'job_name']">
@@ -27,26 +28,26 @@
             <tr>
                 <th>Edit</th>
                 <th>Delete</th>
-                <th>batch_sid</th>
-                <th>datasource_name</th>
-                <th>batch_id</th>
-                <th>batch_name</th>
+                <th pSortableColumn="batch_sid">batch_sid <p-sortIcon field="batch_sid"></p-sortIcon></th>
+                <th pSortableColumn="datasource_name">datasource_name <p-sortIcon field="datasource_name"></p-sortIcon></th>
+                <th pSortableColumn="batch_id">batch_id<p-sortIcon field="batch_id"></p-sortIcon></th>
+                <th pSortableColumn="batch_name">batch_name<p-sortIcon field="batch_name"></p-sortIcon></th>
                 <th>batch_desc</th>
-                <th>batch_type</th>
-                <th>batch_status</th>
-                <th>server_name</th>
-                <th>source_database_name</th>
-                <th>destination_database_name</th>
-                <th>ssis_package_name</th>
-                <th>job_name</th>
-                <th>job_step_name</th>
+                <th pSortableColumn="batch_type">batch_type<p-sortIcon field="batch_type"></p-sortIcon></th>
+                <th pSortableColumn="batch_status">batch_status<p-sortIcon field="batch_status"></p-sortIcon></th>
+                <th pSortableColumn="server_name">server_name<p-sortIcon field="server_name"></p-sortIcon></th>
+                <th pSortableColumn="source_database_name">source_database_name<p-sortIcon field="source_database_name"></p-sortIcon></th>
+                <th pSortableColumn="destination_database_name">destination_database_name<p-sortIcon field="destination_database_name"></p-sortIcon></th>
+                <th pSortableColumn="ssis_package_name">ssis_package_name <p-sortIcon field="ssis_package_name"></p-sortIcon></th>
+                <th pSortableColumn="job_name">job_name <p-sortIcon field="job_name"></p-sortIcon></th>
+                <th pSortableColumn="job_step_name">job_step_name <p-sortIcon field="job_step_name"></p-sortIcon></th>
                 <th>job_scheduled</th>
-                <th>dashboard_type</th>
+                <th pSortableColumn="dashboard_type">dashboard_type<p-sortIcon field="dashboard_type"></p-sortIcon></th>
                 <th>use_mail_status</th>
-                <th>insert_date</th>
-                <th>insert_user</th>
-                <th>update_date</th>
-                <th>update_user</th>
+                <th pSortableColumn="insert_date">insert_date <p-sortIcon field="insert_date"></p-sortIcon></th>
+                <th pSortableColumn="insert_user">insert_user<p-sortIcon field="insert_user"></p-sortIcon></th>
+                <th pSortableColumn="update_date">update_date<p-sortIcon field="update_date"></p-sortIcon></th>
+                <th pSortableColumn="update_user">update_user<p-sortIcon field="update_user"></p-sortIcon></th>
                 <th style="width:8rem"></th>
             </tr>
         </ng-template>
@@ -71,18 +72,19 @@
                 <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
-                            <p-dropdown [options]="options" [(ngModel)]="batch.datasource_sid"
-                                [style]="{'width':'100%'}"></p-dropdown>
+                            <p-dropdown [options]="datasourcesOptions" [virtualScroll]="true" [(ngModel)]="batch.datasource_sid"
+                            [filter]="true" (onChange)="batch.datasource_sid = $event.value" [style]="{'width':'100%'}" 
+                            placeholder="Select a datasource" ></p-dropdown>
                         </ng-template>
                         <ng-template pTemplate="output">
-                            {{batch.datasource_sid}}
+                            {{batch.datasource_name}}
                         </ng-template>
                     </p-cellEditor>
                 </td>
                 <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
-                            <input pInputText type="text" [(ngModel)]="batch.batch_id" required>
+                            <input pInputText type="text" [(ngModel)]="batch.batch_id">
                         </ng-template>
                         <ng-template pTemplate="output">
                             {{batch.batch_id}}
@@ -92,7 +94,7 @@
                 <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
-                            <input pInputText type="text" [(ngModel)]="batch.batch_name">
+                            <input pInputText type="text" [(ngModel)]="batch.batch_name" required="true" requiredMessage="Batch name is required!" >
                         </ng-template>
                         <ng-template pTemplate="output">
                             {{batch.batch_name}}
@@ -114,7 +116,7 @@
                 <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
-                            <input pInputText type="text" [(ngModel)]="batch.batch_type">
+                            <input pInputText type="text" [(ngModel)]="batch.batch_type" required="true">
                         </ng-template>
                         <ng-template pTemplate="output">
                             {{batch.batch_type}}
@@ -126,7 +128,7 @@
                 <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
-                            <input pInputText type="text" [(ngModel)]="batch.batch_status">
+                            <input pInputText type="text" [(ngModel)]="batch.batch_status" required="true">
                         </ng-template>
                         <ng-template pTemplate="output">
                             {{batch.batch_status}}
