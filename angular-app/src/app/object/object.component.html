@@ -1,0 +1,195 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+<div class="card">
+    <p-table #dt styleClass="p-datatable-responsive-demo" [scrollable]="false" [value]="objects" [autoLayout]="true"
+        dataKey="object_sid" [loading]="loading" editMode="row" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[5,10,15]"
+        [filterDelay]="0" [rowHover]="true"
+        [globalFilterFields]="['object_sid','object_id','object_name', 'object_description', 'insert_user',
+        'object_type_sid', 'object_status']">
+    
+    <ng-template pTemplate="caption">
+        <div class="p-d-flex p-ai-center p-jc-between">
+            <h3 style="text-align: center;"><b>OBJECT TABLE</b></h3>
+            <div style="text-align:right">
+                <button pButton pAddRow [table]="dt" [newRow]="addNewRowClick()" label="New" icon="pi pi-plus"
+                    class="p-button-danger p-mr-2"></button>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                        placeholder="Global Search" />
+                </span>
+            </div>
+        </div>
+
+    </ng-template> 
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Edit</th>
+            <th>Delete</th>
+            <th pSortableColumn="object_sid">object_sid <p-sortIcon field="object_sid"></p-sortIcon></th>
+            <th pSortableColumn="datasource_sid">datasource_sid <p-sortIcon field="datasource_sid"></p-sortIcon></th>
+            <th pSortableColumn="object_id">object_id<p-sortIcon field="object_id"></p-sortIcon></th>
+            <th pSortableColumn="object_name">object_name<p-sortIcon field="object_name"></p-sortIcon></th>
+            <th>object_schema</th>
+            <th>object_description</th>
+            <th pSortableColumn="object_type_sid">object_type_sid<p-sortIcon field="object_type_sid"></p-sortIcon></th>
+            <th pSortableColumn="object_status">object_status<p-sortIcon field="object_status"></p-sortIcon></th>
+            <th>source_select</th>
+            <th pSortableColumn="insert_date">insert_date <p-sortIcon field="insert_date"></p-sortIcon></th>
+            <th pSortableColumn="insert_user">insert_user<p-sortIcon field="insert_user"></p-sortIcon></th>
+            <th pSortableColumn="update_date">update_date<p-sortIcon field="update_date"></p-sortIcon></th>
+            <th pSortableColumn="update_user">update_user<p-sortIcon field="update_user"></p-sortIcon></th>
+            <th style="width:8rem"></th>
+        </tr>
+    </ng-template> 
+    <ng-template pTemplate="body" let-object let-editing="editing" let-ri="rowIndex">
+    <tr [pEditableRow]="object">
+            <td style="text-align:center">
+                <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
+                    (click)="onRowEditInit(object)" class="p-button-rounded p-button-text"></button>
+                <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
+                    (click)="onRowEditSave(object, ri, dt)"
+                    class="p-button-rounded p-button-text p-button-success p-mr-2"></button>
+                <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
+                    (click)="onRowEditCancel(object, ri, dt)"
+                    class="p-button-rounded p-button-text p-button-danger"></button>
+            </td>
+            <td> <button *ngIf="!editing" pButton pRipple icon="pi pi-trash"
+                class="p-button-rounded p-button-danger" (click)="deleteObject(object)"></button>
+            </td>
+        <td>
+            {{object.object_sid}}
+        </td>
+
+        <td>
+            <p-cellEditor>
+                <ng-template pTemplate="input">
+                    <p-dropdown [options]="datasourcesOptions" [virtualScroll]="true" [(ngModel)]="object.datasource_sid"
+                    [filter]="true" (onChange)="object.datasource_sid = $event.value" [style]="{'width':'100%'}" 
+                    placeholder="Select a datasource" ></p-dropdown>
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{object.datasource_sid}}
+                </ng-template>
+            </p-cellEditor>
+        </td>
+
+        <td>
+            <p-cellEditor>
+                <ng-template pTemplate="input">
+                    <input pInputText type="text" [(ngModel)]="object.object_id">
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{object.object_id}}
+                </ng-template>
+            </p-cellEditor>
+        </td>
+
+        <td>
+            <p-cellEditor>
+                <ng-template pTemplate="input">
+                    <input pInputText type="text" [(ngModel)]="object.object_name" required="true" requiredMessage="Object name is required!" >
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{object.object_name}}
+                </ng-template>
+            </p-cellEditor>
+        </td>
+
+        <td>
+            <p-cellEditor>
+                <ng-template pTemplate="input">
+                    <input pInputText type="text" [(ngModel)]="object.object_schema" required="true" requiredMessage="Object schema is required!" >
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{object.object_schema}}
+                </ng-template>
+            </p-cellEditor>
+        </td>
+
+        <td>
+            <p-cellEditor>
+                <ng-template pTemplate="input">
+                    <input pInputText type="text" [(ngModel)]="object.object_description" required="true">
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{object.object_description}}
+                </ng-template>
+            </p-cellEditor>
+        </td>
+
+        <td>
+            <p-cellEditor>
+                <ng-template pTemplate="input">
+                    <p-dropdown [options]="objectTypeOptions" [virtualScroll]="true" [(ngModel)]="object.object_type_sid"
+                    [filter]="true" (onChange)="object.object_type_sid = $event.value" [style]="{'width':'100%'}" 
+                    placeholder="Select an object type sid" ></p-dropdown>
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{object.object_type_sid}}
+                </ng-template>
+            </p-cellEditor>
+        </td>
+
+        <td>
+            <p-cellEditor>
+                <ng-template pTemplate="input">
+                    <input pInputText type="text" [(ngModel)]="object.object_status" required="true">
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{object.object_status}}
+                </ng-template>
+            </p-cellEditor>
+        </td>
+
+        <td>
+            <p-cellEditor>
+                <ng-template pTemplate="input">
+                    <input pInputText type="text" [(ngModel)]="object.source_select" >
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{object.source_select}}
+                </ng-template>
+            </p-cellEditor>
+        </td>
+
+        <td>
+            {{object.insert_date}}
+        </td>
+
+        <td>
+            <p-cellEditor>
+                <ng-template pTemplate="input">
+                    <input pInputText type="text" [(ngModel)]="object.insert_user">
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{object.insert_user}}
+                </ng-template>
+            </p-cellEditor>
+        </td>
+
+        <td>
+            {{object.update_date}}
+        </td>
+
+        <td>
+            <p-cellEditor>
+                <ng-template pTemplate="input">
+                    <input pInputText type="text" [(ngModel)]="object.update_user">
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{object.update_user}}
+                </ng-template>
+            </p-cellEditor>
+        </td>
+    </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+        <div class="p-d-flex p-ai-center p-jc-between">
+            In total there are {{objects ? objects.length : 0 }} objects.
+        </div>
+    </ng-template>
+    </p-table>
+</div>

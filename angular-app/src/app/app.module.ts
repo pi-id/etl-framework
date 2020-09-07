@@ -32,7 +32,11 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
-import { AddRowDirective } from "./directives/add-row.directive"
+import { AddRowDirective } from "./directives/add-row.directive";
+import { ObjectComponent } from './object/object.component';
+import { ObjectTaskComponent } from './object-task/object-task.component';
+
+
 
 
 
@@ -47,7 +51,10 @@ import { AddRowDirective } from "./directives/add-row.directive"
     LoginComponent,
     MainComponent,
     RegisterComponent,
-    AddRowDirective
+    AddRowDirective,
+    ObjectComponent,
+    ObjectTaskComponent,
+    
   ],
   imports: [
     BrowserModule,
