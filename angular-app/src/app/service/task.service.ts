@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Task } from '../model/task';
+import { Task } from '../model/task.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -25,6 +25,13 @@ export class TaskService {
       .pipe(
         catchError(this.errorHandler)
       );
+  }
+
+  getTaskByBatchId(id): Observable<Task[]>{
+    return this.httpClient.get<Task[]>(environment.apiUrl + '/batches/' + id + '/tasks/')
+    .pipe(
+      catchError(this.errorHandler)
+    );
   }
 
   createTask(task): Observable<Task> {

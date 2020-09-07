@@ -1,0 +1,27 @@
+export class Task {
+    task_sid; 
+    batch_sid?; 
+    task_type; 
+    task_id?; 
+    dependent_task_sid?; 
+    task_name; 
+    task_desc?; 
+    task_status?; 
+    dq_check_type_sid?; 
+    ssis_package_quid?; 
+    ssis_package_name?; 
+    ssis_package_version?; 
+    ssis_package_path?; 
+    ssis_package_file_name?; 
+    server_name?;
+    source_database_name?; 
+    destination_database_name?; 
+    include_in_report?; 
+    external_end_task?; 
+    insert_date?; 
+    insert_user?; 
+    update_date?;
+    update_user?; 
+    task_order?;
+    batch_name?;   
+}

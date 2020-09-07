@@ -1,17 +1,19 @@
-import { Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Batch } from '../model/batch.model';
+import { Domain } from '../model/domain.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BatchService {
- 
+export class DomainService {
+  //url = /values/?name=batch_status/
+  //      /values/?name=task_status/
+  url: string = "/values/?name="
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -20,26 +22,8 @@ export class BatchService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getAll(): Observable<Batch[]> {
-    return this.httpClient.get<Batch[]>(environment.apiUrl + '/batches/')
-      .pipe(
-        catchError(this.errorHandler)
-      );
-  }
-
-  createBatch(batch): Observable<Batch> {
-    return this.httpClient.post<Batch>(environment.apiUrl + '/batches/', JSON.stringify(batch), this.httpOptions)
-      .pipe(
-        catchError(this.errorHandler)
-      );
-  }
-
-  updateBatch(batch: Batch): Observable<Batch> {
-    return this.httpClient.put<Batch>(environment.apiUrl +'/batches/' + batch.batch_sid + '/', batch);
-  }
-
-  deleteBatch(id) {
-    return this.httpClient.delete<Batch>(environment.apiUrl + '/batches/' + id, this.httpOptions)
+  getAll(table_name: String): Observable<Domain[]> {
+    return this.httpClient.get<Domain[]>(environment.apiUrl + this.url + table_name + '_status')
       .pipe(
         catchError(this.errorHandler)
       );
@@ -49,8 +33,10 @@ export class BatchService {
     console.log(error);
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
+      // Get client-side error
       errorMessage = error.error.message;
     } else {
+      // Get server-side error
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
     console.log(errorMessage);

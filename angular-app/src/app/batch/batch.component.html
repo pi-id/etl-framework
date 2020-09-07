@@ -5,7 +5,7 @@
     <p-table #dt styleClass="p-datatable-responsive-demo" [scrollable]="false" [value]="batches" [autoLayout]="true"
         dataKey="batch_sid" [loading]="loading" editMode="row" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[5,10,15]"
-        [filterDelay]="0"
+        [filterDelay]="0" [rowHover]="true"
         [globalFilterFields]="['batch_sid','datasource_name','batch_id','batch_name', 'batch_desc', 'input_user',
         'batch_type', 'batch_status', 'server_name', 'source_database_name', 'destination_database_name',
         'ssis_package_name', 'job_name']">
@@ -127,14 +127,17 @@
 
                 <td>
                     <p-cellEditor>
-                        <ng-template pTemplate="input">
-                            <input pInputText type="text" [(ngModel)]="batch.batch_status" required="true">
-                        </ng-template>
-                        <ng-template pTemplate="output">
-                            {{batch.batch_status}}
-                        </ng-template>
+                      <ng-template pTemplate="input">
+                        <p-dropdown [options]="domain_values" [virtualScroll]="true" [(ngModel)]="batch.batch_status"
+                         [style]="{'width':'100%'}" placeholder="Select status">
+                        </p-dropdown>
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                        {{batch.batch_status}}
+                      </ng-template>
                     </p-cellEditor>
-                </td>
+                  </td>
+          
 
                 <td>
                     <p-cellEditor>
