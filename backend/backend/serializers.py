@@ -3,9 +3,12 @@ from rest_framework import serializers
 from .models import *
 
 class MetaBatchSerializer(serializers.ModelSerializer):
+    datasource_name = serializers.CharField(source = 'datasource_sid.datasource_name', read_only = True)
     class Meta:
         model = MetaBatch
-        fields = "__all__"
+        fields = [field.name for field in model._meta.fields]
+        fields.append('datasource_name')
+        
      
 class MetaTaskSerializer(serializers.ModelSerializer):
     batch_name = serializers.CharField(source = 'batch_sid.batch_name', read_only = True)
