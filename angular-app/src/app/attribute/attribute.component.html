@@ -1,0 +1,121 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+<div class="card">
+    <p-table #dt styleClass="p-datatable-responsive-demo" [scrollable]="false" [value]="attributes" [autoLayout]="true"
+        dataKey="attribute_id" [loading]="loading" editMode="row" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[5,10,15]"
+        [filterDelay]="0" [rowHover]="true"
+        [globalFilterFields]="['attribute_id','task_name','column_name','dv_sid']">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                <h3 style="text-align: center;"><b>ATTRIBUTE TABLE</b></h3>
+                <div style="text-align:right">
+                    <button pButton pAddRow [table]="dt" [newRow]="addNewRowClick()" label="New" icon="pi pi-plus"
+                        class="p-button-danger p-mr-2"></button>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'startsWith')"
+                            placeholder="Global Search" />
+                    </span>
+                </div>
+            </div>
+
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th pSortableColumn="attribute_id">attribute_id <p-sortIcon field="attribute_id"></p-sortIcon></th>
+                <th pSortableColumn="task_name">task_name <p-sortIcon field="task_name"></p-sortIcon></th>
+                <th pSortableColumn="column_name">column_name<p-sortIcon field="column_name"></p-sortIcon></th>
+                <th pSortableColumn="pk_flag">pk_flag<p-sortIcon field="pk_flag"></p-sortIcon></th>
+                <th pSortableColumn="dv_f">dv_f<p-sortIcon field="dv_f"></p-sortIcon></th>
+                <th pSortableColumn="dv_sid">dv_sid<p-sortIcon field="dv_sid"></p-sortIcon></th>
+                <th style="width:8rem"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-attribute let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="attribute">
+                <td style="text-align:center">
+                    <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
+                        (click)="onRowEditInit(attribute)" class="p-button-rounded p-button-text"></button>
+                    <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
+                        (click)="onRowEditSave(attribute, ri, dt)"
+                        class="p-button-rounded p-button-text p-button-success p-mr-2"></button>
+                    <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
+                        (click)="onRowEditCancel(attribute, ri, dt)"
+                        class="p-button-rounded p-button-text p-button-danger"></button>
+                </td>
+                <td> <button *ngIf="!editing" pButton pRipple icon="pi pi-trash"
+                        class="p-button-rounded p-button-danger" (click)="deleteAttribute(attribute)"></button></td>
+                <td>
+                    {{attribute.attribute_id}}
+                </td>
+
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <p-dropdown [options]="tasksOptions" [virtualScroll]="true" itemSize="5" [filter]="true" [(ngModel)]="attribute.task_sid"
+                            [style]="{'width':'100%'}" 
+                            placeholder="Select task"  required="true"></p-dropdown>
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{attribute.task_name}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="attribute.column_name">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{attribute.column_name}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="attribute.pk_flag" required="true">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{attribute.pk_flag}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="attribute.dv_f">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{attribute.dv_f}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="attribute.dv_sid">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{attribute.dv_sid}}
+                        </ng-template>
+                    </p-cellEditor>
+
+                </td>
+               
+            </tr>
+
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{attributes ? attributes.length : 0 }} rows.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
