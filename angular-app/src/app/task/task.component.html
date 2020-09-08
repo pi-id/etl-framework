@@ -5,10 +5,11 @@
   <p-table #dt styleClass="p-datatable-responsive-demo" [scrollable]="false" [value]="tasks" [autoLayout]="true"
     dataKey="task_sid" [rowHover]="true" [loading]="loading" editMode="row" [paginator]="true" [rows]="5"
     [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-    [rowsPerPageOptions]="[5,10,15]" [filterDelay]="0" [globalFilterFields]="['task_sid','batch_sid','task_type','task_id', 'dependent_task_sid', 'task_name',
+    [rowsPerPageOptions]="[5,10,15]" [filterDelay]="0"
+    [globalFilterFields]="['task_sid','batch_sid','task_type','task_id', 'dependent_task_sid', 'task_name',
         'task_desc', 'task_status', 'dq_check_type_sid', 'ssis_package_guid', 'ssis_package_name',
         'ssis_package_version', 'ssis_package_path', 'ssis_package_file_name', 'server_name', 'source_database_name', 'destination_database_name',
-        'insert_date', 'insert_user', 'update_date', 'update_user', 'task_order', 'batch_name']">
+        'insert_date', 'insert_user', 'update_date', 'update_user', 'task_order', 'batch_name', 'dependent_task_name']">
     <ng-template pTemplate="caption">
       <div class="p-d-flex p-ai-center p-jc-between">
         <h3 class="text-align: left"><b>Choose batch</b></h3>
@@ -78,6 +79,96 @@
         <th pSortableColumn="update_user">update_user<p-sortIcon field="update_user"></p-sortIcon>
         </th>
         <th pSortableColumn="task_order">task_order<p-sortIcon field="task_order"></p-sortIcon>
+        </th>
+        <th style="width:8rem"></th>
+      </tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'task_sid', 'startsWith')"
+            placeholder="Search by task_sid" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'batch_name', 'startsWith')"
+            placeholder="Search by batch_name" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'task_type', 'startsWith')"
+            placeholder="Search by task_type" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'task_id', 'startsWith')"
+            placeholder="Search by task_id" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'dependent_task_sid', 'startsWith')"
+            placeholder="Search by dependent_task_sid" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'task_name', 'startsWith')"
+            placeholder="Search by task_name" class="p-column-filter">
+        </th>
+        <th></th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'task_status', 'startsWith')"
+            placeholder="Search by task_status" class="p-column-filter">
+        </th>
+        <th></th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'ssis_package_guid', 'startsWith')"
+            placeholder="Search by ssis_package_guid" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'ssis_package_name', 'startsWith')"
+            placeholder="Search by ssis_package_name" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'ssis_package_version', 'startsWith')"
+            placeholder="Search by ssis_package_version" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'ssis_package_path', 'startsWith')"
+            placeholder="Search by ssis_package_path" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'ssis_package_file_name', 'startsWith')"
+            placeholder="Search by ssis_package_file_name" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'server_name', 'startsWith')"
+            placeholder="Search by server_name" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'source_database_name', 'startsWith')"
+            placeholder="Search by source_database_name" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text"
+            (input)="dt.filter($event.target.value, 'destination_database_name', 'startsWith')"
+            placeholder="Search by destination_database_name" class="p-column-filter">
+        </th>
+        <th></th>
+        <th></th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'insert_date', 'startsWith')"
+            placeholder="Search by insert_date" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'insert_user', 'startsWith')"
+            placeholder="Search by insert_user" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'update_date', 'startsWith')"
+            placeholder="Search by update_date" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'update_user', 'startsWith')"
+            placeholder="Search by update_user" class="p-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'task_order', 'startsWith')"
+            placeholder="Search by task_order" class="p-column-filter">
         </th>
         <th style="width:8rem"></th>
       </tr>
