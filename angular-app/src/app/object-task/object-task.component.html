@@ -1,1 +1,152 @@
-<p>object-task works!</p>
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+ <div class="card">
+    <p-table #dt styleClass="p-datatable-responsive-demo" [scrollable]="false" [value]="objectTasks" [autoLayout]="true"
+    dataKey="object_task_sid" [loading]="loading" editMode="row" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[5,10,15]"
+    [filterDelay]="0" [rowHover]="true"
+    [globalFilterFields]="['object_task_sid','source_object_sid','target_object_sid', 'task_sid', 'insert_user',
+     'object_task_status']"> 
+     <ng-template pTemplate="caption">
+        <div class="p-d-flex p-ai-center p-jc-between">
+            <h3 style="text-align: center;"><b>OBJECT TASK TABLE</b></h3>
+            <div style="text-align:right">
+                <button pButton pAddRow [table]="dt" [newRow]="addNewRowClick()" label="New" icon="pi pi-plus"
+                    class="p-button-danger p-mr-2"></button>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                        placeholder="Global Search" />
+                </span>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Edit</th>
+            <th>Delete</th>
+            <th pSortableColumn="object_task_sid">object_task_sid <p-sortIcon field="object_task_sid"></p-sortIcon></th>
+            <th pSortableColumn="source_object_sid">source_object_sid <p-sortIcon field="source_object_sid"></p-sortIcon></th>
+            <th pSortableColumn="target_object_sid">target_object_sid<p-sortIcon field="target_object_sid"></p-sortIcon></th>
+            <th pSortableColumn="task_sid">task_sid<p-sortIcon field="task_sid"></p-sortIcon></th>
+            <th pSortableColumn="object_task_status">object_task_status<p-sortIcon field="object_task_status"></p-sortIcon></th>
+            <th>incremental_load</th>
+            <th pSortableColumn="insert_date">insert_date <p-sortIcon field="insert_date"></p-sortIcon></th>
+            <th pSortableColumn="insert_user">insert_user<p-sortIcon field="insert_user"></p-sortIcon></th>
+            <th pSortableColumn="update_date">update_date<p-sortIcon field="update_date"></p-sortIcon></th>
+            <th pSortableColumn="update_user">update_user<p-sortIcon field="update_user"></p-sortIcon></th>
+            <th style="width:8rem"></th>
+        </tr>
+    </ng-template>  
+    <ng-template pTemplate="body" let-objecttask let-editing="editing" let-ri="rowIndex">
+        <tr [pEditableRow]="objecttask">
+            <td style="text-align:center">
+                <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
+                    (click)="onRowEditInit(objecttask)" class="p-button-rounded p-button-text"></button>
+                <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
+                    (click)="onRowEditSave(objecttask, ri, dt)"
+                    class="p-button-rounded p-button-text p-button-success p-mr-2"></button>
+                <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
+                    (click)="onRowEditCancel(objecttask, ri, dt)"
+                    class="p-button-rounded p-button-text p-button-danger"></button>
+            </td>
+            <td> <button *ngIf="!editing" pButton pRipple icon="pi pi-trash"
+                class="p-button-rounded p-button-danger" (click)="deleteObjectTask(objecttask)"></button>
+            </td>
+            <td>
+                {{objecttask.object_task_sid}}
+            </td>
+
+            <td>
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <p-dropdown [options]="sourceObjectsOptions" [virtualScroll]="true" [(ngModel)]="objecttask.source_object_sid"
+                        [filter]="true" (onChange)="objecttask.source_object_sid = $event.value" [style]="{'width':'100%'}" 
+                        placeholder="Select a source object sid" ></p-dropdown>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{objecttask.source_object_sid}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+
+            <td>
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <p-dropdown [options]="sourceObjectsOptions" [virtualScroll]="true" [(ngModel)]="objecttask.target_object_sid"
+                        [filter]="true" (onChange)="objecttask.target_object_sid = $event.value" [style]="{'width':'100%'}" 
+                        placeholder="Select a target object sid" ></p-dropdown>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{objecttask.target_object_sid}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+
+            <td>
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <p-dropdown [options]="tasksOptions" [virtualScroll]="true" [(ngModel)]="objecttask.task_sid"
+                        [filter]="true" (onChange)="objecttask.task_sid = $event.value" [style]="{'width':'100%'}" 
+                        placeholder="Select a task sid" ></p-dropdown>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{objecttask.task_sid}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            
+            <td>
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <input pInputText type="text" [(ngModel)]="objecttask.object_task_status" required="true">
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{objecttask.object_task_status}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+
+            <td>
+                {{objecttask.incremental_load}}
+            </td>
+
+            <td>
+                {{objecttask.insert_date}}
+            </td>
+    
+            <td>
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <input pInputText type="text" [(ngModel)]="objecttask.insert_user">
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{objecttask.insert_user}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+    
+            <td>
+                {{objecttask.update_date}}
+            </td>
+    
+            <td>
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <input pInputText type="text" [(ngModel)]="objecttask.update_user">
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{objecttask.update_user}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            
+      </tr>
+</ng-template>
+<ng-template pTemplate="summary">
+    <div class="p-d-flex p-ai-center p-jc-between">
+        In total there are {{objectTasks ? objectTasks.length : 0 }} object tasks.
+    </div>
+</ng-template>
+  </p-table>
+ </div>

@@ -37,6 +37,7 @@ import { ObjectComponent } from './object/object.component';
 import { ObjectTaskComponent } from './object-task/object-task.component';
 
 
+import { AttributeComponent } from './attribute/attribute.component'
 
 
 
@@ -55,6 +56,7 @@ import { ObjectTaskComponent } from './object-task/object-task.component';
     ObjectComponent,
     ObjectTaskComponent,
     
+    AttributeComponent
   ],
   imports: [
     BrowserModule,

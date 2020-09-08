@@ -223,6 +223,7 @@ class MetaObjectList(APIView):
     def post(self, request, format=None):
         serializer = MetaObjectSerializer(data=request.data)
         if serializer.is_valid():
+        
             serializer.save(insert_date = timezone.now())
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -244,7 +245,7 @@ class MetaObjectDetail(generics.RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        serializer.save(update_date =  timezone.now())
+        serializer.save(update_date=timezone.now())
         return Response(serializer.data)
         
 ################################################################################################

@@ -18,7 +18,8 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ObjectComponent implements OnInit {
   objects: Object[];
-  datasources: Datasource[]; 
+  datasources: Datasource[];
+  
   objectDialog: boolean;
   batch: Object;
   selectedBatches: Object[];
@@ -69,6 +70,9 @@ export class ObjectComponent implements OnInit {
       }
     );
   }
+
+  
+   
   loadDomainValues(): void{
     this.domainService.getAll(this.table_name)
       .subscribe(
