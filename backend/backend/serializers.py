@@ -12,10 +12,12 @@ class MetaBatchSerializer(serializers.ModelSerializer):
      
 class MetaTaskSerializer(serializers.ModelSerializer):
     batch_name = serializers.CharField(source = 'batch_sid.batch_name', read_only = True)
+    dependent_task_name = serializers.CharField(source = 'dependent_task_sid.task_name', read_only = True)
     class Meta:
         model = MetaTask
         fields = [field.name for field in model._meta.fields]
         fields.append('batch_name')
+        fields.append('dependent_task_name')
     
     
 class MetaDependencySerializer(serializers.ModelSerializer):
