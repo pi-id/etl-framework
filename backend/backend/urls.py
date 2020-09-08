@@ -22,5 +22,6 @@ urlpatterns = [
     path('attributes/<negint:pk>/', views.MetaAttributeDetail.as_view()),
     path('datasources/', views.MetaDatasourceList.as_view()),
     path('datasources/<negint:pk>/', views.MetaDatasourceDetail.as_view()),
-    path('values/', views.DomainValuesList.as_view())
+    path('values/', views.DomainValuesList.as_view()),
+    path('filter/', views.FilteredList.as_view())
 ]
