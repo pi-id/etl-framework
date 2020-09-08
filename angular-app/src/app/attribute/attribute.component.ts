@@ -133,7 +133,7 @@ export class AttributeComponent implements OnInit {
       task_sid: null, 
       column_name: null,
       pk_flag: false,
-      DV_f: false,
+      dv_f: false,
       dv_sid: null,
     };
     return empty;
