@@ -55,7 +55,7 @@ class MetaObjectTaskSerializer(serializers.ModelSerializer):
         fields = [field.name for field in model._meta.fields]
         fields.append('source_object_name')
         fields.append('target_object_name')
-        fields.append('task_sid.task_name')
+        fields.append('task_name')
         
 
 class MetaAttributeSerializer(serializers.ModelSerializer):
