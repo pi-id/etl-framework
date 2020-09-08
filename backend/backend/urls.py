@@ -18,6 +18,8 @@ urlpatterns = [
     path('objects/<negint:pk>/', views.MetaObjectDetail.as_view()),
     path('object-tasks/', views.MetaObjectTaskList.as_view()),
     path('object-tasks/<negint:pk>/', views.MetaObjectTaskDetail.as_view()),
+    path('object-types/', views.MetaObjectTypeList.as_view()),
+    path('object-types/<negint:pk>/', views.MetaObjectTypeDetail.as_view()),
     path('attributes/', views.MetaAttributeList.as_view()),
     path('attributes/<negint:pk>/', views.MetaAttributeDetail.as_view()),
     path('datasources/', views.MetaDatasourceList.as_view()),
