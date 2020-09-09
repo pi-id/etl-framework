@@ -24,4 +24,5 @@ export class Task {
     update_user?; 
     task_order?;
     batch_name?;   
+    dependent_task_name?; 
 }
