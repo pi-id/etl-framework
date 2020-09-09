@@ -34,6 +34,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import {CheckboxModule} from 'primeng/checkbox';
 
 import { AddRowDirective } from "./directives/add-row.directive";
+import {ExportDirective } from "./directives/export.directive"
 import { ObjectComponent } from './object/object.component';
 import { ObjectTaskComponent } from './object-task/object-task.component';
 
@@ -54,6 +55,7 @@ import { AttributeComponent } from './attribute/attribute.component'
     MainComponent,
     RegisterComponent,
     AddRowDirective,
+    ExportDirective,
     ObjectComponent,
     ObjectTaskComponent,
     

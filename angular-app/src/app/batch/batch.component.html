@@ -13,6 +13,10 @@
         <ng-template pTemplate="caption">
             <div class="p-d-flex p-ai-center p-jc-between">
                 <h3 style="text-align: center;"><b>BATCH TABLE</b></h3>
+                <div style="text-align:left">
+                    <button pButton [appExport]="batches" fileName="batch_table"  pRipple icon="pi pi-file-excel" label="Export to excel"  class="p-button-danger p-mr-2">
+                    </button>
+                    </div>
                 <div style="text-align:right">
                     <button pButton pAddRow [table]="dt" [newRow]="addNewRowClick()" label="New" icon="pi pi-plus"
                         class="p-button-danger p-mr-2"></button>
@@ -134,7 +138,7 @@
                     <p-cellEditor>
                         <ng-template pTemplate="input">
                             <p-dropdown [options]="datasourcesOptions" [virtualScroll]="true" [(ngModel)]="batch.datasource_sid"
-                            [filter]="true" (onChange)="batch.datasource_sid = $event.value" [style]="{'width':'100%'}" 
+                            [filter]="true" filterMatchMode="startsWith" (onChange)="batch.datasource_sid = $event.value" [style]="{'width':'100%'}" 
                             placeholder="Select a datasource" ></p-dropdown>
                         </ng-template>
                         <ng-template pTemplate="output">

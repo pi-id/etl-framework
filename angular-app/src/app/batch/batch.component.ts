@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BatchService } from '../service/batch.service';
 import { Batch } from '../model/batch.model';
 import { ConfirmationService } from 'primeng/api';
@@ -8,7 +8,6 @@ import {Datasource} from '../model/datasource.model';
 import {DatasourceService} from '../service/datasource.service'; 
 import { DomainService } from '../service/domain.service';
 import { Table } from 'primeng/table';
-import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-batch',
@@ -18,6 +17,7 @@ import { debounceTime } from 'rxjs/operators';
 })
 
 export class BatchComponent implements OnInit {
+  @ViewChild('dt', { static: false }) dt: any;
   batches: Batch[];
   datasources: Datasource[]; 
   batchDialog: boolean;
@@ -121,6 +121,8 @@ export class BatchComponent implements OnInit {
           delete this.clonedBatches[copy.batch_sid];
           this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Batch added!', life: 3000 });
           this.loadBatches();
+          //set page to last page 
+          this.dt.first = Math.floor(this.dt.totalRecords / this.dt.rows) * this.dt.rows;
         },
         error => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Batch couldn\'t be added!', life: 3000 });
