@@ -5,8 +5,8 @@
     dataKey="object_task_sid" [loading]="loading" editMode="row" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[5,10,15]"
     [filterDelay]="0" [rowHover]="true"
-    [globalFilterFields]="['object_task_sid','source_object_sid','target_object_sid', 'task_sid', 'insert_user',
-     'object_task_status']"> 
+    [globalFilterFields]="['object_task_sid','source_object_name','target_object_name', 'task_name', 
+     'object_task_status', 'insert_date', 'insert_user', 'update_date', 'update_user']"> 
      <ng-template pTemplate="caption">
         <div class="p-d-flex p-ai-center p-jc-between">
             <h3 style="text-align: center;"><b>OBJECT TASK TABLE</b></h3>
@@ -26,15 +26,53 @@
             <th>Edit</th>
             <th>Delete</th>
             <th pSortableColumn="object_task_sid">object_task_sid <p-sortIcon field="object_task_sid"></p-sortIcon></th>
-            <th pSortableColumn="source_object_sid">source_object_sid <p-sortIcon field="source_object_sid"></p-sortIcon></th>
-            <th pSortableColumn="target_object_sid">target_object_sid<p-sortIcon field="target_object_sid"></p-sortIcon></th>
-            <th pSortableColumn="task_sid">task_sid<p-sortIcon field="task_sid"></p-sortIcon></th>
+            <th pSortableColumn="source_object_name">source_object_name <p-sortIcon field="source_object_name"></p-sortIcon></th>
+            <th pSortableColumn="target_object_name">target_object_name<p-sortIcon field="target_object_name"></p-sortIcon></th>
+            <th pSortableColumn="task_sid">task_name<p-sortIcon field="task_name"></p-sortIcon></th>
             <th pSortableColumn="object_task_status">object_task_status<p-sortIcon field="object_task_status"></p-sortIcon></th>
             <th>incremental_load</th>
             <th pSortableColumn="insert_date">insert_date <p-sortIcon field="insert_date"></p-sortIcon></th>
             <th pSortableColumn="insert_user">insert_user<p-sortIcon field="insert_user"></p-sortIcon></th>
             <th pSortableColumn="update_date">update_date<p-sortIcon field="update_date"></p-sortIcon></th>
             <th pSortableColumn="update_user">update_user<p-sortIcon field="update_user"></p-sortIcon></th>
+            <th style="width:8rem"></th>
+        </tr>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>
+                <input pInputText type="text" (input)="dt.filter($event.target.value, 'object_task_sid', 'startsWith')"
+                    placeholder="Search by object_task_sid" class="p-column-filter">
+            </th>
+            <th>
+                <input pInputText type="text" (input)="dt.filter($event.target.value, 'source_object_name', 'startsWith')"
+                    placeholder="Search by source object" class="p-column-filter">
+            </th>
+            <th>
+                <input pInputText type="text" (input)="dt.filter($event.target.value, 'target_object_name', 'startsWith')"
+                    placeholder="Search by target object" class="p-column-filter">
+            </th>
+            <th>
+                <input pInputText type="text" (input)="dt.filter($event.target.value, 'task_name', 'startsWith')"
+                    placeholder="Search by task_name" class="p-column-filter">
+            </th>
+            <th>
+                <input pInputText type="text" (input)="dt.filter($event.target.value, 'object_task_status', 'startsWith')"
+                    placeholder="Search by object task status" class="p-column-filter">
+            </th>
+            <th></th>
+            <th>
+                <input pInputText type="text" (input)="dt.filter($event.target.value, 'insert_date', 'startsWith')" placeholder="Search by insert_date" class="p-column-filter">
+            </th>
+            <th>
+                <input pInputText type="text" (input)="dt.filter($event.target.value, 'insert_user', 'startsWith')" placeholder="Search by insert_user" class="p-column-filter">
+            </th>
+            <th>
+                <input pInputText type="text" (input)="dt.filter($event.target.value, 'update_date', 'startsWith')" placeholder="Search by update_date" class="p-column-filter">
+            </th>
+            <th>
+                <input pInputText type="text" (input)="dt.filter($event.target.value, 'update_user', 'startsWith')" placeholder="Search by update_user" class="p-column-filter">
+            </th>
             <th style="width:8rem"></th>
         </tr>
     </ng-template>  
@@ -62,10 +100,10 @@
                     <ng-template pTemplate="input">
                         <p-dropdown [options]="sourceObjectsOptions" [virtualScroll]="true" [(ngModel)]="objecttask.source_object_sid"
                         [filter]="true" (onChange)="objecttask.source_object_sid = $event.value" [style]="{'width':'100%'}" 
-                        placeholder="Select a source object sid" ></p-dropdown>
+                        placeholder="Select a source object" ></p-dropdown>
                     </ng-template>
                     <ng-template pTemplate="output">
-                        {{objecttask.source_object_sid}}
+                        {{objecttask.source_object_name}}
                     </ng-template>
                 </p-cellEditor>
             </td>
@@ -75,10 +113,10 @@
                     <ng-template pTemplate="input">
                         <p-dropdown [options]="sourceObjectsOptions" [virtualScroll]="true" [(ngModel)]="objecttask.target_object_sid"
                         [filter]="true" (onChange)="objecttask.target_object_sid = $event.value" [style]="{'width':'100%'}" 
-                        placeholder="Select a target object sid" ></p-dropdown>
+                        placeholder="Select a target object" ></p-dropdown>
                     </ng-template>
                     <ng-template pTemplate="output">
-                        {{objecttask.target_object_sid}}
+                        {{objecttask.target_object_name}}
                     </ng-template>
                 </p-cellEditor>
             </td>
@@ -88,10 +126,10 @@
                     <ng-template pTemplate="input">
                         <p-dropdown [options]="tasksOptions" [virtualScroll]="true" [(ngModel)]="objecttask.task_sid"
                         [filter]="true" (onChange)="objecttask.task_sid = $event.value" [style]="{'width':'100%'}" 
-                        placeholder="Select a task sid" ></p-dropdown>
+                        placeholder="Select a task" ></p-dropdown>
                     </ng-template>
                     <ng-template pTemplate="output">
-                        {{objecttask.task_sid}}
+                        {{objecttask.task_name}}
                     </ng-template>
                 </p-cellEditor>
             </td>
