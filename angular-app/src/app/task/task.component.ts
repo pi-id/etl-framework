@@ -11,7 +11,6 @@ import { Batch } from '../model/batch.model';
 
 import { SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { last } from 'rxjs/operators';
 
 
 @Component({
@@ -136,6 +135,8 @@ export class TaskComponent implements OnInit {
           delete this.clonedTasks[copy.task_sid];
           this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Task added!', life: 3000 });
           this.loadTasks();
+          //set page to last page 
+          this.dt.first = Math.floor(this.dt.totalRecords / this.dt.rows) * this.dt.rows;
         },
         error => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Task couldn\'t be added!', life: 3000 });
@@ -188,6 +189,26 @@ export class TaskComponent implements OnInit {
       }
     }
   }
+
+  exportExcel() {
+    import("xlsx").then(xlsx => {
+        const worksheet = xlsx.utils.json_to_sheet(this.tasks);
+        const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+        this.saveAsExcelFile(excelBuffer, "tasks");
+    });
+}
+
+saveAsExcelFile(buffer: any, fileName: string): void {
+  import("file-saver").then(FileSaver => {
+      let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+      let EXCEL_EXTENSION = '.xlsx';
+      const data: Blob = new Blob([buffer], {
+          type: EXCEL_TYPE
+      });
+      FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+  });
+}
 
   addNewRowClick() {
     const empty = {

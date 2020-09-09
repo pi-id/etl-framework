@@ -10,6 +10,10 @@
         <ng-template pTemplate="caption">
             <div class="p-d-flex p-ai-center p-jc-between">
                 <h3 style="text-align: center;"><b>ATTRIBUTE TABLE</b></h3>
+                <div style="text-align:left">
+                    <button pButton [appExport]="attributes" fileName="attribute_table"  pRipple icon="pi pi-file-excel" label="Export to excel"  class="p-button-danger p-mr-2">
+                    </button>
+                    </div>
                 <div style="text-align:right">
                     <button pButton pAddRow [table]="dt" [newRow]="addNewRowClick()" label="New" icon="pi pi-plus"
                         class="p-button-danger p-mr-2"></button>
@@ -20,7 +24,6 @@
                     </span>
                 </div>
             </div>
-
         </ng-template>
         <ng-template pTemplate="header">
             <tr>
