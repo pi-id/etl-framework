@@ -489,7 +489,8 @@ class MetaTask(models.Model):
     batch_sid = models.ForeignKey(MetaBatch, models.DO_NOTHING, db_column='batch_sid', blank=True, null=True)
     task_type = models.CharField(max_length=30)
     task_id = models.CharField(max_length=255, blank=True, null=True)
-    dependent_task_sid = models.IntegerField(blank=True, null=True)
+    dependent_task_sid = models.ForeignKey('self', models.DO_NOTHING, db_column='dependent_task_sid', 
+    related_name = 'dependent_task', blank=True, null=True)
     task_name = models.CharField(max_length=255)
     task_desc = models.CharField(max_length=2000, blank=True, null=True)
     task_status = models.CharField(max_length=50, blank=True, null=True)

@@ -11,6 +11,7 @@ import { Batch } from '../model/batch.model';
 
 import { SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { last } from 'rxjs/operators';
 
 
 @Component({
@@ -23,6 +24,7 @@ import { Table } from 'primeng/table';
 export class TaskComponent implements OnInit {
   @ViewChild('dt', { static: false }) dt: any;
   tasks: Task[];
+  dependentTasks: SelectItem[]; 
   allTasks: Task[]; 
   batches: Batch[];
   domain_values: SelectItem[]; 
@@ -56,6 +58,10 @@ export class TaskComponent implements OnInit {
         data => {
           this.tasks = data;
           this.allTasks = data; 
+          this.dependentTasks = [];
+          for (let i = 0; i < data.length; i++) {
+            this.dependentTasks.push({ label: data[i].task_name, value: data[i].task_sid })
+          }
           this.loading = false;
         },
         error => {
@@ -123,6 +129,8 @@ export class TaskComponent implements OnInit {
     if (task.task_sid == 0) {
       let copy = { ...task };
       delete task.task_sid;
+      delete task.insert_date; 
+      delete task.update_date; 
       this.taskService.createTask(task).subscribe(
         response => {
           delete this.clonedTasks[copy.task_sid];
@@ -139,7 +147,7 @@ export class TaskComponent implements OnInit {
         response => {
           delete this.clonedTasks[task.task_sid];
           this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Task updated!', life: 3000 });
-          this.selectBatch(table); 
+          this.loadTasks(); 
         },
         error => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Task couldn\'t be updated!', life: 3000 });
@@ -184,7 +192,7 @@ export class TaskComponent implements OnInit {
   addNewRowClick() {
     const empty = {
       task_sid: 0,
-      batch_sid: 0,
+      batch_sid: null,
       task_type: null,
       task_id: null,
       dependent_task_sid: null,

@@ -3,17 +3,17 @@
 
 <div class="card">
   <p-table #dt styleClass="p-datatable-responsive-demo" [scrollable]="false" [value]="tasks" [autoLayout]="true"
-    dataKey="task_sid" [rowHover]="true" [loading]="loading" editMode="row" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[5,10,15]"
-    [filterDelay]="0" [globalFilterFields]="['task_sid','batch_sid','task_type','task_id', 'dependent_task_sid', 'task_name',
+    dataKey="task_sid" [rowHover]="true" [loading]="loading" editMode="row" [paginator]="true" [rows]="5"
+    [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [rowsPerPageOptions]="[5,10,15]" [filterDelay]="0" [globalFilterFields]="['task_sid','batch_sid','task_type','task_id', 'dependent_task_sid', 'task_name',
         'task_desc', 'task_status', 'dq_check_type_sid', 'ssis_package_guid', 'ssis_package_name',
         'ssis_package_version', 'ssis_package_path', 'ssis_package_file_name', 'server_name', 'source_database_name', 'destination_database_name',
         'insert_date', 'insert_user', 'update_date', 'update_user', 'task_order', 'batch_name']">
     <ng-template pTemplate="caption">
       <div class="p-d-flex p-ai-center p-jc-between">
         <h3 class="text-align: left"><b>Choose batch</b></h3>
-  <p-multiSelect [options]="batchesOptions" [(ngModel)]="selectedBatches"
-  (onChange)="selectBatch(dt)"></p-multiSelect>
+        <p-multiSelect [options]="batchesOptions" [(ngModel)]="selectedBatches" (onChange)="selectBatch(dt)">
+        </p-multiSelect>
         <h3 style="text-align: center;"><b>TASK TABLE</b></h3>
         <div style="text-align:right">
           <button pButton pAddRow [table]="dt" [newRow]="addNewRowClick()" label="New" icon="pi pi-plus"
@@ -103,7 +103,7 @@
           <p-cellEditor>
             <ng-template pTemplate="input">
               <p-dropdown [options]="batchesOptions" [virtualScroll]="true" [(ngModel)]="task.batch_sid" [filter]="true"
-               [style]="{'width':'100%'}" placeholder="Select batch">
+                [style]="{'width':'100%'}" placeholder="Select batch">
               </p-dropdown>
             </ng-template>
             <ng-template pTemplate="output">
@@ -133,17 +133,20 @@
             </ng-template>
           </p-cellEditor>
         </td>
-
         <td>
+
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <input pInputText type="text" [(ngModel)]="task.dependent_task_sid">
+              <p-dropdown [options]="dependentTasks" [virtualScroll]="true" [(ngModel)]="task.dependent_task_sid"
+                [filter]="true" [style]="{'width':'100%'}" placeholder="Select dependent task">
+              </p-dropdown>
             </ng-template>
             <ng-template pTemplate="output">
               {{task.dependent_task_sid}}
             </ng-template>
           </p-cellEditor>
         </td>
+
 
         <td>
           <p-cellEditor>
@@ -172,7 +175,7 @@
           <p-cellEditor>
             <ng-template pTemplate="input">
               <p-dropdown [options]="domain_values" [virtualScroll]="true" [(ngModel)]="task.task_status"
-               [style]="{'width':'100%'}" placeholder="Select status">
+                [style]="{'width':'100%'}" placeholder="Select status">
               </p-dropdown>
             </ng-template>
             <ng-template pTemplate="output">
@@ -284,7 +287,8 @@
         <td>
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <input pInputText type="text" [(ngModel)]="task.include_in_report">
+              <p-checkbox [(ngModel)]="task.include_in_report" [binary]="true"></p-checkbox>
+              {{task.include_in_report}}
             </ng-template>
             <ng-template pTemplate="output">
               {{task.include_in_report}}
@@ -295,7 +299,8 @@
         <td>
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <input pInputText type="text" [(ngModel)]="task.external_end_task">
+              <p-checkbox [(ngModel)]="task.external_end_task" [binary]="true"></p-checkbox>
+              {{task.external_end_task}}
             </ng-template>
             <ng-template pTemplate="output">
               {{task.external_end_task}}
@@ -308,7 +313,14 @@
         </td>
 
         <td>
-          {{task.insert_user}}
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.insert_user">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.insert_user}}
+            </ng-template>
+          </p-cellEditor>
         </td>
 
         <td>
@@ -316,8 +328,16 @@
         </td>
 
         <td>
-          {{task.update_user}}
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="task.update_user">
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{task.update_user}}
+            </ng-template>
+          </p-cellEditor>
         </td>
+
 
         <td>
           <p-cellEditor>

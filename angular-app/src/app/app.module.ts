@@ -31,6 +31,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import {CheckboxModule} from 'primeng/checkbox';
 
 import { AddRowDirective } from "./directives/add-row.directive";
 import { ObjectComponent } from './object/object.component';
@@ -79,7 +80,8 @@ import { AttributeComponent } from './attribute/attribute.component'
 		ButtonModule,
 		ToastModule,
     InputTextModule,
-    ProgressBarModule
+    ProgressBarModule,
+    CheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

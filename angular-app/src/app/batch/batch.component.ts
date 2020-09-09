@@ -113,6 +113,8 @@ export class BatchComponent implements OnInit {
     if(batch.batch_sid == 0){
       let copy = {...batch}; 
       delete batch.batch_sid;
+      delete batch.insert_date; 
+      delete batch.update_date; 
       this.batchService.createBatch(batch).subscribe(
         response => {
           delete this.clonedBatches[copy.batch_sid];

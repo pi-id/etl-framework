@@ -129,7 +129,7 @@
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <p-dropdown [options]="domain_values" [virtualScroll]="true" [(ngModel)]="batch.batch_status"
-                         [style]="{'width':'100%'}" placeholder="Select status">
+                         [style]="{'width':'100%'}" placeholder="Select status" required="true">
                         </p-dropdown>
                       </ng-template>
                       <ng-template pTemplate="output">
@@ -211,7 +211,8 @@
                 <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
-                            <input pInputText type="text" [(ngModel)]="batch.job_scheduled">
+                            <p-checkbox [(ngModel)]="batch.job_scheduled" [binary]="true"></p-checkbox>
+                            {{batch.job_scheduled}}
                         </ng-template>
                         <ng-template pTemplate="output">
                             {{batch.job_scheduled}}
@@ -233,7 +234,8 @@
                 <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
-                            <input pInputText type="text" [(ngModel)]="batch.use_mail_status">
+                            <p-checkbox [(ngModel)]="batch.use_mail_status" [binary]="true"></p-checkbox>
+                            {{batch.use_mail_status}}
                         </ng-template>
                         <ng-template pTemplate="output">
                             {{batch.use_mail_status}}
