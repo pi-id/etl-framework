@@ -122,6 +122,7 @@ class MetaDependencyTaskList(generics.ListCreateAPIView):
     queryset = MetaDependencyTask.objects.all()
     serializer_class = MetaDependencyTaskSerializer
 
+
 #################################################################################################
 
 class MetaObjectTaskList(APIView):
@@ -164,6 +165,45 @@ class MetaObjectTaskDetail(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
 
+class MetaObjectTypeList(APIView):
+    """
+    View za 3 HTTP metode:
+    1. GET
+    2. POST
+    3. DELETE
+    """
+    def get(self, request, format = None):
+        meta_object_type_list = MetaObjectType.objects.all()
+        serializer = MetaObjectTypeSerializer(meta_object_type_list, many = True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = MetaObjectTypeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(insert_date = timezone.now())
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, format=None):
+        meta_object_type_list = MetaObjectType.objects.all()
+        ids = self.request.query_params.get('ids', None)
+        if ids is not None:
+            ids = ids.split(',')
+            meta_object_type_list.filter(object_type_sid__in=ids).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MetaObjectTypeDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MetaObjectType.objects.all()
+    serializer_class = MetaObjectTypeSerializer
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(update_date =  timezone.now())
+        return Response(serializer.data)
+        
 ##########################################################################################
 
 class MetaAttributeList(APIView):
