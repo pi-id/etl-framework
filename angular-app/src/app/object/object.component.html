@@ -123,7 +123,7 @@
         <td>
             <p-cellEditor>
                 <ng-template pTemplate="input">
-                    <p-dropdown [options]="objectTypeOptions" [virtualScroll]="true" [(ngModel)]="object.object_type_sid"
+                    <p-dropdown [options]="objectTypesOptions" [virtualScroll]="true" [(ngModel)]="object.object_type_sid"
                     [filter]="true" (onChange)="object.object_type_sid = $event.value" [style]="{'width':'100%'}" 
                     placeholder="Select an object type sid" ></p-dropdown>
                 </ng-template>
@@ -162,7 +162,7 @@
         <td>
             <p-cellEditor>
                 <ng-template pTemplate="input">
-                    <input pInputText type="text" [(ngModel)]="object.insert_user">
+                    <input pInputText type="text" [(ngModel)]="object.insert_user" required="true" >
                 </ng-template>
                 <ng-template pTemplate="output">
                     {{object.insert_user}}

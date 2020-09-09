@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {ObjectService} from '../service/object.service';
 import {Object} from '../model/object.model';
+import {ObjectType} from '../model/object-type.model';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { SelectItem } from 'primeng/api';
 import {Datasource} from '../model/datasource.model'; 
 import {DatasourceService} from '../service/datasource.service'; 
+import {ObjectService} from '../service/object.service';
+import {ObjectTypeService} from '../service/object-type.service';
 import { DomainService } from '../service/domain.service';
 import { Table } from 'primeng/table';
 import { BehaviorSubject } from 'rxjs';
@@ -19,12 +21,13 @@ import { BehaviorSubject } from 'rxjs';
 export class ObjectComponent implements OnInit {
   objects: Object[];
   datasources: Datasource[];
-  
+  objectTypes:ObjectType[];
   objectDialog: boolean;
   batch: Object;
   selectedBatches: Object[];
   submitted: boolean;
   datasourcesOptions: SelectItem[]; 
+  objectTypesOptions:SelectItem[];
   domain_values: SelectItem[]; 
   clonedObjects: { [s: number]: Object; } = {};
   loading: boolean = true; 
@@ -34,12 +37,14 @@ export class ObjectComponent implements OnInit {
     private messageService: MessageService, 
     private confirmationService: ConfirmationService,
     private datasourceService: DatasourceService,
-    private domainService: DomainService) { }
+    private domainService: DomainService,
+    private objectTypeService: ObjectTypeService) { }
 
   ngOnInit(): void {
     this.loadObjects();
     this.loadDataSource();  
     this.loadDomainValues();
+    this.loadObjectTypes();
   }
   loadObjects():void{
     this.objectService.getAll()
@@ -71,7 +76,24 @@ export class ObjectComponent implements OnInit {
     );
   }
 
-  
+  loadObjectTypes(){
+    this.objectTypeService.getAll()
+    .subscribe(
+      data => {
+        this.objectTypes=data;
+        this.objectTypesOptions=[];
+        for(let i = 0; i < data.length; i++){
+          this.objectTypesOptions.push({label: data[i].object_type_sid, value: data[i].object_type_sid})
+        }
+        console.log("objectTypes"); 
+        console.log(this.objectTypesOptions); 
+        this.loading = false; 
+      },
+      error => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error occured while loading data!', life: 3000 });
+      }
+    );
+  }
    
   loadDomainValues(): void{
     this.domainService.getAll(this.table_name)

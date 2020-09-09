@@ -19,7 +19,7 @@ export class ObjectTypeService {
   constructor(private httpClient: HttpClient) { }
   
   getAll(): Observable<ObjectType[]> {
-    return this.httpClient.get<ObjectType[]>(environment.apiUrl + '/objects/')
+    return this.httpClient.get<ObjectType[]>(environment.apiUrl + '/object-types/')
       .pipe(
         catchError(this.errorHandler)
       );
