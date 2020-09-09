@@ -118,7 +118,7 @@
             <td>
                 <p-cellEditor>
                     <ng-template pTemplate="input">
-                        <input pInputText type="text" [(ngModel)]="objecttask.insert_user">
+                        <input pInputText type="text" [(ngModel)]="objecttask.insert_user" required="true">
                     </ng-template>
                     <ng-template pTemplate="output">
                         {{objecttask.insert_user}}
