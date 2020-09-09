@@ -58,12 +58,13 @@ class MetaObjectTaskSerializer(serializers.ModelSerializer):
         fields.append('source_object_name')
         fields.append('target_object_name')
         fields.append('task_name')
+       
         
-        
-class MetaObjectTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MetaObjectType
-        fields = "__all__"
+#class MetaObjectTypeSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = MetaObjectType
+#        fields = "__all__"
+
         
 
 class MetaAttributeSerializer(serializers.ModelSerializer):
