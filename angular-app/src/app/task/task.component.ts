@@ -23,6 +23,7 @@ import { Table } from 'primeng/table';
 export class TaskComponent implements OnInit {
   @ViewChild('dt', { static: false }) dt: any;
   tasks: Task[];
+  selectedTasks: Task[]; 
   dependentTasks: SelectItem[]; 
   allTasks: Task[]; 
   batches: Batch[];
@@ -118,9 +119,34 @@ export class TaskComponent implements OnInit {
       }
     });
   }
+  
+  deleteSelectedTasks() {
+    this.confirmationService.confirm({
+        message: 'Are you sure you want to delete the selected tasks?',
+        header: 'Confirm',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          console.log("accepted"); 
+           for(let attr of this.selectedTasks){
+            this.taskService.deleteTask(attr.task_sid).subscribe(
+              response => {
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Task with sid: ' + attr.task_sid + ' deleted', life: 3000 });
+                this.loadTasks();
+                this.selectedTasks = this.selectedTasks.filter(item => item.task_sid !== attr.task_sid);
+              },
+              error => {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Task with sid: ' + attr.task_sid + ' couldn\'t be deleted', life: 3000 });
+                this.selectedTasks = this.selectedTasks.filter(item => item.task_sid !== attr.task_sid);
+              });
+           }
+        }
+    });
+}
+
+
 
   onRowEditInit(task: Task) {
-    this.clonedTasks[task.task_sid] = { ...task };
+    this.clonedTasks[task.task_sid] = { ...task };  
   }
 
   onRowEditSave(task: Task, index: number, table: Table) {
@@ -189,26 +215,6 @@ export class TaskComponent implements OnInit {
       }
     }
   }
-
-  exportExcel() {
-    import("xlsx").then(xlsx => {
-        const worksheet = xlsx.utils.json_to_sheet(this.tasks);
-        const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-        this.saveAsExcelFile(excelBuffer, "tasks");
-    });
-}
-
-saveAsExcelFile(buffer: any, fileName: string): void {
-  import("file-saver").then(FileSaver => {
-      let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-      let EXCEL_EXTENSION = '.xlsx';
-      const data: Blob = new Blob([buffer], {
-          type: EXCEL_TYPE
-      });
-      FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
-  });
-}
 
   addNewRowClick() {
     const empty = {

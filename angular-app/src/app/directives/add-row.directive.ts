@@ -11,6 +11,7 @@ export class AddRowDirective {
   @HostListener('click', ['$event'])
   onClick(event: Event) {
 
+    this.table.clear(); 
     // Insert a new empty row
     this.table.value.unshift(this.newRow);
 

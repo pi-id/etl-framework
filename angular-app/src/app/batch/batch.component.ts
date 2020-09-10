@@ -105,6 +105,29 @@ export class BatchComponent implements OnInit {
     });
   }
 
+  deleteSelectedBatches() {
+    this.confirmationService.confirm({
+        message: 'Are you sure you want to delete the selected batches?',
+        header: 'Confirm',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          console.log("accepted"); 
+           for(let attr of this.selectedBatches){
+            this.batchService.deleteBatch(attr.batch_sid).subscribe(
+              response => {
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Batch with sid: ' + attr.batch_sid + ' deleted', life: 6000 });
+                this.loadBatches();
+                this.selectedBatches = this.selectedBatches.filter(item => item.batch_sid !== attr.batch_sid);
+              },
+              error => {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Batch with sid: ' + attr.batch_sid + ' couldn\'t be deleted', life: 6000 });
+                this.selectedBatches = this.selectedBatches.filter(item => item.batch_sid !== attr.batch_sid);
+              });
+           }
+        }
+    });
+}
+
   onRowEditInit(batch: Batch) {
     this.clonedBatches[batch.batch_sid] = {...batch};
   }
