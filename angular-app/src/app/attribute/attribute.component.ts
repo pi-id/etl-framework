@@ -18,6 +18,7 @@ import { Table } from 'primeng/table';
 export class AttributeComponent implements OnInit {
   @ViewChild('dt', { static: false }) dt: any;
   attributes: Attribute[];
+  selectedAttributes: Attribute[];
   tasksOptions: SelectItem[];
   attributeDialog: boolean;
   attribute: Attribute;
@@ -77,11 +78,32 @@ export class AttributeComponent implements OnInit {
           },
           error => {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Attribute couldn\'t be deleted', life: 3000 });
-
           });
       }
     });
   }
+
+  deleteSelectedAttributes() {
+    this.confirmationService.confirm({
+        message: 'Are you sure you want to delete the selected attributes?',
+        header: 'Confirm',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+           for(let attr of this.selectedAttributes){
+            this.attributeService.deleteAttribute(attr.attribute_id).subscribe(
+              response => {
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Attribute with id: ' + attr.attribute_id + ' deleted', life: 6000 });
+                this.loadAttributes();
+                this.selectedAttributes = this.selectedAttributes.filter(item => item.attribute_id !== attr.attribute_id);
+              },
+              error => {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Attribute with id: ' + attr.attribute_id + 'couldn\'t be deleted', life: 6000 });
+                this.selectedAttributes = this.selectedAttributes.filter(item => item.attribute_id !== attr.attribute_id);
+              });
+           }
+        }
+    });
+}
 
   onRowEditInit(attribute: Attribute) {
     this.clonedAttributes[attribute.attribute_id] = { ...attribute };

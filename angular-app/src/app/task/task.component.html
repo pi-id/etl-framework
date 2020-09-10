@@ -5,11 +5,11 @@
   <p-table #dt styleClass="p-datatable-responsive-demo" [scrollable]="false" [value]="tasks" [autoLayout]="true"
     dataKey="task_sid" [rowHover]="true" [loading]="loading" editMode="row" [paginator]="true" [rows]="5"
     [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-    [rowsPerPageOptions]="[5,10,15]" [filterDelay]="0"
-    [globalFilterFields]="['task_sid','batch_sid','task_type','task_id', 'dependent_task_sid', 'task_name',
+    [rowsPerPageOptions]="[5,10,15]" [filterDelay]="0" [globalFilterFields]="['task_sid','batch_sid','task_type','task_id', 'dependent_task_sid', 'task_name',
         'task_desc', 'task_status', 'dq_check_type_sid', 'ssis_package_guid', 'ssis_package_name',
         'ssis_package_version', 'ssis_package_path', 'ssis_package_file_name', 'server_name', 'source_database_name', 'destination_database_name',
-        'insert_date', 'insert_user', 'update_date', 'update_user', 'task_order', 'batch_name', 'dependent_task_name']">
+        'insert_date', 'insert_user', 'update_date', 'update_user', 'task_order', 'batch_name', 'dependent_task_name']"
+    [(selection)]="selectedTasks">
     <ng-template pTemplate="caption">
       <div class="p-d-flex p-ai-center p-jc-between">
         <h3 class="text-align: left"><b>Choose batch</b></h3>
@@ -17,9 +17,15 @@
         </p-multiSelect>
         <h3 style="text-align: center;"><b>TASK TABLE</b></h3>
         <div style="text-align:left">
-          <button pButton [appExport]="tasks" fileName="task_table"  pRipple icon="pi pi-file-excel" label="Export to excel"  class="p-button-danger p-mr-2">
+          <button pButton [appExport]="tasks" fileName="task_table" pRipple icon="pi pi-file-excel"
+            label="Export to excel" class="p-button-danger p-mr-2">
           </button>
-          </div>
+          <br>
+          <br>
+          <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
+            (click)="deleteSelectedTasks()"
+            *ngIf="!(!selectedTasks || !selectedTasks.length)"></button>
+        </div>
         <div style="text-align:right">
           <button pButton pAddRow [table]="dt" [newRow]="addNewRowClick()" label="New" icon="pi pi-plus"
             class="p-button-danger p-mr-2"></button>
@@ -34,6 +40,9 @@
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
+        <th style="width: 3rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
         <th>Edit</th>
         <th>Delete</th>
         <th pSortableColumn="task_sid">task_sid <p-sortIcon field="task_sid"></p-sortIcon>
@@ -87,6 +96,7 @@
         <th style="width:8rem"></th>
       </tr>
       <tr>
+        <th></th>
         <th></th>
         <th></th>
         <th>
@@ -179,6 +189,9 @@
     </ng-template>
     <ng-template pTemplate="body" let-task let-editing="editing" let-ri="rowIndex">
       <tr [pEditableRow]="task">
+        <td>
+          <p-tableCheckbox [value]="task"></p-tableCheckbox>
+      </td>
         <td style="text-align:center">
           <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
             (click)="onRowEditInit(task)" class="p-button-rounded p-button-text"></button>
@@ -198,7 +211,7 @@
           <p-cellEditor>
             <ng-template pTemplate="input">
               <p-dropdown [options]="batchesOptions" [virtualScroll]="true" [(ngModel)]="task.batch_sid" [filter]="true"
-              filterMatchMode="startsWith" [style]="{'width':'100%'}" placeholder="Select batch">
+                filterMatchMode="startsWith" [style]="{'width':'100%'}" placeholder="Select batch">
               </p-dropdown>
             </ng-template>
             <ng-template pTemplate="output">
@@ -233,7 +246,8 @@
           <p-cellEditor>
             <ng-template pTemplate="input">
               <p-dropdown [options]="dependentTasks" [virtualScroll]="true" [(ngModel)]="task.dependent_task_sid"
-                [filter]="true" filterMatchMode="startsWith" [style]="{'width':'100%'}" placeholder="Select dependent task">
+                [filter]="true" filterMatchMode="startsWith" [style]="{'width':'100%'}"
+                placeholder="Select dependent task">
               </p-dropdown>
             </ng-template>
             <ng-template pTemplate="output">
@@ -270,7 +284,7 @@
           <p-cellEditor>
             <ng-template pTemplate="input">
               <p-dropdown [options]="domain_values" [virtualScroll]="true" [(ngModel)]="task.task_status"
-              filterMatchMode="startsWith" [style]="{'width':'100%'}" placeholder="Select status">
+                filterMatchMode="startsWith" [style]="{'width':'100%'}" placeholder="Select status">
               </p-dropdown>
             </ng-template>
             <ng-template pTemplate="output">

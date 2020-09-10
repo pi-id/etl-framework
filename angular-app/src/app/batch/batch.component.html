@@ -9,13 +9,19 @@
         [globalFilterFields]="['batch_sid', 'datasource_name', 'batch_id', 'batch_name',
         'batch_type', 'batch_status', 'server_name', 'source_database_name', 'destination_database_name',
         'ssis_package_name', 'job_name', 'job_step_name', 'job_scheduled', 'dashboard_type',
-        'use_mail_status', 'insert_date', 'insert_user', 'update_date', 'update_user']">
+        'use_mail_status', 'insert_date', 'insert_user', 'update_date', 'update_user']"
+        [(selection)]="selectedBatches">
         <ng-template pTemplate="caption">
             <div class="p-d-flex p-ai-center p-jc-between">
                 <h3 style="text-align: center;"><b>BATCH TABLE</b></h3>
                 <div style="text-align:left">
                     <button pButton [appExport]="batches" fileName="batch_table"  pRipple icon="pi pi-file-excel" label="Export to excel"  class="p-button-danger p-mr-2">
                     </button>
+                    <br>
+                    <br>
+                    <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
+                    (click)="deleteSelectedBatches()"
+                    *ngIf="!(!selectedBatches || !selectedBatches.length)"></button>
                     </div>
                 <div style="text-align:right">
                     <button pButton pAddRow [table]="dt" [newRow]="addNewRowClick()" label="New" icon="pi pi-plus"
@@ -31,6 +37,9 @@
         </ng-template>
         <ng-template pTemplate="header">
             <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
                 <th>Edit</th>
                 <th>Delete</th>
                 <th pSortableColumn="batch_sid">batch_sid <p-sortIcon field="batch_sid"></p-sortIcon></th>
@@ -57,6 +66,7 @@
             </tr>
 
             <tr>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th>
@@ -118,6 +128,9 @@
         </ng-template>
         <ng-template pTemplate="body" let-batch let-editing="editing" let-ri="rowIndex">
             <tr [pEditableRow]="batch">
+                <td>
+                    <p-tableCheckbox [value]="batch"></p-tableCheckbox>
+                </td>
                 <td style="text-align:center">
                     <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
                         (click)="onRowEditInit(batch)" class="p-button-rounded p-button-text"></button>
