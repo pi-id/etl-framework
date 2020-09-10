@@ -1,0 +1,29 @@
+ 
+<div class="tab">
+    <span>
+    <button id="defaultbutton" class="tablinks" mdbBtn color="danger" rounded="true" size="sm" class="my-0" (click)="openTab('Batch');drawBatchGraph()" >Batch</button>
+    <button class="tablinks" mdbBtn color="danger" rounded="true" size="sm" class="my-0"  (click)="openTab('Task');drawTaskGraph()">Task</button>
+    </span>
+  </div>
+
+<div id="Batch" class="tabcontent" >
+    <p>Task Dependecies</p>
+    <p>Labels are displaying graph ids</p>
+    <div id="cont2"></div>
+    
+    
+   
+    
+</div>
+
+
+<div id="Task" class="tabcontent">
+    <p>Task Dependecies</p>
+    <p>Labels are displaying task ids</p>
+    <div id="cont1"></div>
+    
+</div>
+
+
+
+

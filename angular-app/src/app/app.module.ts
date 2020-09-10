@@ -39,7 +39,8 @@ import { ObjectComponent } from './object/object.component';
 import { ObjectTaskComponent } from './object-task/object-task.component';
 
 
-import { AttributeComponent } from './attribute/attribute.component'
+import { AttributeComponent } from './attribute/attribute.component';
+import { GraphComponent } from './graph/graph.component'
 
 
 
@@ -59,7 +60,9 @@ import { AttributeComponent } from './attribute/attribute.component'
     ObjectComponent,
     ObjectTaskComponent,
     
-    AttributeComponent
+    AttributeComponent,
+    
+    GraphComponent
   ],
   imports: [
     BrowserModule,
