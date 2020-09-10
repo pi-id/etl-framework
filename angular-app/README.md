@@ -28,3 +28,5 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 Dodatne napomene:
 1. prije pokretanja same aplikacije, potrebno je pokrenuti narednu npm install, kako bi se instalirali svi potrebni moduli navedeni u package.json
+
+2. u file-u src\environments\environment.ts u environment.apiUrl se zadaje url na kojem se vrti API s kojeg se dohvacaju sami podaci 
