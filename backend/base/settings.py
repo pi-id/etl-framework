@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'backend',
     'rest_framework', 
     'corsheaders',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -90,6 +91,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'base.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':(
+        'rest_framework.authentication.TokenAuthentication'
+    ),
+    'DEFAULT_PERMISSION_CLASSES':(
+        'rest_framework.permissions.IsAuthenticated'
+    )
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -99,8 +109,8 @@ DATABASES = {
     'default': {
         'ENGINE' :  'sql_server.pyodbc',
         'NAME' : 'ADM_Configuration',
-        'USER' : 'student1',
-        'PASSWORD' : 'student1234',
+        'USER' : 'Student1',
+        'PASSWORD' : 'Student12345',
         'HOST' : '127.0.0.1',
         'PORT' : '', # empty string means default port
         'OPTIONS': {
