@@ -7,11 +7,22 @@
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[5,10,15]"
         [filterDelay]="0" [rowHover]="true"
         [globalFilterFields]="['object_sid', 'datasource_name', 'object_id', 'object_name', 'object_description', 
-        'object_type_sid', 'object_status', 'insert_date', 'insert_user', 'update_date', 'update_user']">
+        'object_type_sid', 'object_status', 'insert_date', 'insert_user', 'update_date', 'update_user']"
+        [(selection)]="selectedObjects">
     
     <ng-template pTemplate="caption">
         <div class="p-d-flex p-ai-center p-jc-between">
             <h3 style="text-align: center;"><b>OBJECT TABLE</b></h3>
+            <div style="text-align:left">
+                <button pButton [appExport]="objects" fileName="objects_table" pRipple icon="pi pi-file-excel"
+                    label="Export to excel" class="p-button-danger p-mr-2">
+                </button>
+                <br>
+                <br>
+                <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
+                    (click)="deleteSelectedObjects()"
+                    *ngIf="!(!selectedObjects || !selectedObjects.length)"></button>
+            </div>
             <div style="text-align:right">
                 <button pButton pAddRow [table]="dt" [newRow]="addNewRowClick()" label="New" icon="pi pi-plus"
                     class="p-button-danger p-mr-2"></button>
@@ -26,6 +37,9 @@
     </ng-template> 
     <ng-template pTemplate="header">
         <tr>
+            <th style="width: 3rem">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
             <th>Edit</th>
             <th>Delete</th>
             <th pSortableColumn="object_sid">object_sid <p-sortIcon field="object_sid"></p-sortIcon></th>
@@ -44,6 +58,7 @@
             <th style="width:8rem"></th>
         </tr>
         <tr>
+            <th></th>
             <th></th>
             <th></th>
             <th>
@@ -93,6 +108,9 @@
     </ng-template> 
     <ng-template pTemplate="body" let-object let-editing="editing" let-ri="rowIndex">
     <tr [pEditableRow]="object">
+        <td>
+            <p-tableCheckbox [value]="object"></p-tableCheckbox>
+        </td>
             <td style="text-align:center">
                 <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
                     (click)="onRowEditInit(object)" class="p-button-rounded p-button-text"></button>

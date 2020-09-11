@@ -43,6 +43,7 @@ export class BatchComponent implements OnInit {
     this.loadDomainValues();
   }
 
+  //loading all batches from API with batch service
   loadBatches(): void {
     this.batchService.getAll()
       .subscribe(
@@ -54,6 +55,7 @@ export class BatchComponent implements OnInit {
         });
   }
 
+  //creating dropdown menu 
   loadDataSource(): void{
     this.datasourceService.getAll()
     .subscribe(
@@ -71,6 +73,7 @@ export class BatchComponent implements OnInit {
     );
   }
 
+  //creating dropdown menu 
   loadDomainValues(): void {
     this.domainService.getAll(this.table_name)
       .subscribe(
@@ -85,7 +88,8 @@ export class BatchComponent implements OnInit {
         }
       );
   }
-
+  
+  //deleting selected batch 
   deleteBatch(batch: Batch) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete ' + batch.batch_name + '?',
@@ -105,6 +109,7 @@ export class BatchComponent implements OnInit {
     });
   }
 
+  //deleting multiple selected batches 
   deleteSelectedBatches() {
     this.confirmationService.confirm({
         message: 'Are you sure you want to delete the selected batches?',
@@ -128,14 +133,17 @@ export class BatchComponent implements OnInit {
     });
 }
 
+//in case of edit, remembering old values if user cancels edit action
   onRowEditInit(batch: Batch) {
     this.clonedBatches[batch.batch_sid] = {...batch};
   }
 
   onRowEditSave(batch: Batch, index: number, table:Table){
 
+    //if sid of any object is 0, that indicates that this is and add operation
     if(batch.batch_sid == 0){
       let copy = {...batch}; 
+      //delete sid = 0 when sending JSON to API for creating new object
       delete batch.batch_sid;
       delete batch.insert_date; 
       delete batch.update_date; 
@@ -166,6 +174,7 @@ export class BatchComponent implements OnInit {
       }
   }
 
+  //if sid is 0, user canceled creating new object, else, user cancel editing existing object 
   onRowEditCancel(batch: Batch, index: number, table: Table) {
     if (batch.batch_sid == 0){
       delete this.batches[index]; 
@@ -177,6 +186,7 @@ export class BatchComponent implements OnInit {
     delete this.clonedBatches[batch.batch_sid]; 
   }
 
+  //creating empty row when button New is clicked
   addNewRowClick() {
     const empty = {
       batch_sid: 0,

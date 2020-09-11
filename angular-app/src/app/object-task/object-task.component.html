@@ -10,6 +10,16 @@
      <ng-template pTemplate="caption">
         <div class="p-d-flex p-ai-center p-jc-between">
             <h3 style="text-align: center;"><b>OBJECT TASK TABLE</b></h3>
+            <div style="text-align:left">
+                <button pButton [appExport]="objectTasks" fileName="objects_tasks_table" pRipple icon="pi pi-file-excel"
+                    label="Export to excel" class="p-button-danger p-mr-2">
+                </button>
+                <br>
+                <br>
+                <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
+                    (click)="deleteSelectedObjectTasks()"
+                    *ngIf="!(!selectedObjectTasks || !selectedObjectTasks.length)"></button>
+            </div>
             <div style="text-align:right">
                 <button pButton pAddRow [table]="dt" [newRow]="addNewRowClick()" label="New" icon="pi pi-plus"
                     class="p-button-danger p-mr-2"></button>
@@ -23,6 +33,9 @@
     </ng-template>
     <ng-template pTemplate="header">
         <tr>
+            <th style="width: 3rem">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
             <th>Edit</th>
             <th>Delete</th>
             <th pSortableColumn="object_task_sid">object_task_sid <p-sortIcon field="object_task_sid"></p-sortIcon></th>
@@ -38,6 +51,7 @@
             <th style="width:8rem"></th>
         </tr>
         <tr>
+            <th></th>
             <th></th>
             <th></th>
             <th>
@@ -78,6 +92,9 @@
     </ng-template>  
     <ng-template pTemplate="body" let-objecttask let-editing="editing" let-ri="rowIndex">
         <tr [pEditableRow]="objecttask">
+            <td>
+                <p-tableCheckbox [value]="objecttask"></p-tableCheckbox>
+            </td>
             <td style="text-align:center">
                 <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
                     (click)="onRowEditInit(objecttask)" class="p-button-rounded p-button-text"></button>
