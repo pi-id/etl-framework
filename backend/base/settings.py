@@ -101,10 +101,6 @@ REST_FRAMEWORK = {
 }
 
 
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-
 DATABASES = {
     'default': {
         'ENGINE' :  'sql_server.pyodbc',
@@ -112,25 +108,12 @@ DATABASES = {
         'USER' : 'Student1',
         'PASSWORD' : 'Student12345',
         'HOST' : '127.0.0.1',
-        'PORT' : '', # empty string means default port
+        'PORT' : '',
         'OPTIONS': {
-            'driver': 'ODBC Driver 13 for SQL Server', # ODBC Data Source (64-bit) Drivers
+            'driver': 'ODBC Driver 13 for SQL Server', 
             'options': '-c search_path=dbo',
         },
     },
-    
-    'meta' : {
-        'ENGINE': 'sql_server.pyodbc',
-        'NAME': 'multi_schema_db_2',  # The name is the schema
-        'USER' : 'student1',
-        'PASSWORD' : 'student1234',
-        'HOST' : '127.0.0.1',
-        'PORT' : '', # empty string means default port
-        'OPTIONS': {
-        'driver': 'ODBC Driver 13 for SQL Server', # ODBC Data Source (64-bit) Drivers
-        'options': '-c search_path=meta'
-        },
-    }
 }
 
 # Password validation
@@ -152,11 +135,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-   # 'DEFAULT_PERMISSION_CLASSES': [
-   #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-   # ],
    'DEFAULT_PERMISSION_CLASSES': [],
    'DEFAULT_AUTHENTICATION_CLASSES' : []
 }

@@ -22,3 +22,11 @@ s MS SQL Serverom.
 
 5. Potrebno je izvršiti skriptu 'domain_script.sql' da bi se u bazu podataka stvorile i napunile tablice 'domain_directory' i
 'domain_value'.
+
+6. Dobro pogledati datoteku _backend/urls.py_
+i pripaziti na oblike URL-ova.
+Posebno pripaziti na slanje parametera,
+npr. kod brisanja batchova
+"batches/?ids=100,101,102".
+Parametar "ids" se ne vidi u datoteci _urls.py_ zato što je opcionalan, ali se može vidjeti u datoteci _views.py_,
+konkretno u liniji "ids = self.request.query_params.get('ids', None)".
