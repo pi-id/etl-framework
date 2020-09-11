@@ -2,6 +2,14 @@ from rest_framework import serializers
 
 from .models import *
 
+"""
+Serializeri služe za
+serijalizaciju modela u JSON i 
+deserijalizaciju JSON-a u model.
+Članska varijabla "fields" služi da 
+definiranje atributa koji će biti prikazani u JSON-u.
+"""
+ 
 class MetaBatchSerializer(serializers.ModelSerializer):
     datasource_name = serializers.CharField(source = 'datasource_sid.datasource_name', read_only = True)
     class Meta:

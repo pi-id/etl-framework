@@ -192,7 +192,7 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
-class MetaAttribute(models.Model): # meta attribute i domain value imaju autofield bez primary_key=True
+class MetaAttribute(models.Model): 
     attribute_id = models.AutoField(primary_key=True)
     task_sid = models.ForeignKey('MetaTask', models.DO_NOTHING, db_column='task_sid')
     column_name = models.CharField(max_length=255, blank=True, null=True)
@@ -569,6 +569,7 @@ class MetaTaskLogDetail(models.Model):
     class Meta:
         managed = False
         db_table = 'meta_task_log_detail'
+
 
 class DependencyBatchRecursion(models.Model):
     dependency_sid = models.IntegerField(primary_key=True)

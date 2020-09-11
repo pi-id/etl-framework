@@ -30,6 +30,10 @@ class MetaBatchList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, format=None):
+        """ 
+        Pretpostavka je da će URL biti oblika 
+        batches/?ids=100,101,102
+        """
         meta_batch_list = MetaBatch.objects.all()
         ids = self.request.query_params.get('ids', None)
         if ids is not None:
@@ -40,6 +44,13 @@ class MetaBatchList(APIView):
 
 
 class MetaBatchDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    View za rad nad konkretnim primjerkom MetaBatcha.
+    Omogućuje:
+    1. dohvat (GET) konkretnog MetaBatcha preko njegovog primarnog ključa
+    2. ažuriranje (PUT) konkretnog MetaBatcha preko njegovog primarnog ključa
+    3. brisanje (DELETE) konkretnog MetaBatcha preko njegovog primarnog ključa
+    """
     queryset = MetaBatch.objects.all()
     serializer_class = MetaBatchSerializer
     def update(self, request, *args, **kwargs):
@@ -50,13 +61,9 @@ class MetaBatchDetail(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
 
-#########################################################################################
 class MetaTaskList(APIView):
     """
-    View za 3 HTTP metode:
-    1. GET
-    2. POST
-    3. DELETE
+    Analogno s MetaBatchList Viewom
     """
     def get(self, request, format = None):
         meta_task_list = MetaTask.objects.all()
@@ -81,6 +88,9 @@ class MetaTaskList(APIView):
 
 
 class MetaTaskDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Analogno s MetaBatchDetail Viewom
+    """
     queryset = MetaTask.objects.all()
     serializer_class = MetaTaskSerializer
     def update(self, request, *args, **kwargs):
@@ -92,6 +102,9 @@ class MetaTaskDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class MetaTaskListFromBatch(generics.ListCreateAPIView):
+    """
+    Analogno s MetaBatchList Viewom
+    """
     model = MetaTask
     serializer_class = MetaTaskSerializer
     def get_queryset(self):
@@ -100,37 +113,41 @@ class MetaTaskListFromBatch(generics.ListCreateAPIView):
         return queryset.filter(batch_sid=batchid)
 
 
-#################################################################################################
-
-
 class MetaDependencyList(generics.ListCreateAPIView):
+    """
+    View za dohvat i stvaranje novih MetaDependencyja.
+    """
     queryset = MetaDependency.objects.all()
     serializer_class = MetaDependencySerializer
 
 
 class MetaDependencyDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    View za dohvat, ažuriranje i brisanje konkretnog MetaDependecyja
+    """
     queryset = MetaDependency.objects.all()
     serializer_class = MetaDependencySerializer
 
 
-class MetaDependencyTaskDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = MetaDependencyTask.objects.all()
-    serializer_class = MetaDependencyTaskSerializer
-
-
 class MetaDependencyTaskList(generics.ListCreateAPIView):
+    """
+    Analogno s MetaDependencyList
+    """
     queryset = MetaDependencyTask.objects.all()
     serializer_class = MetaDependencyTaskSerializer
 
 
-#################################################################################################
+class MetaDependencyTaskDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Analogno s MetaDependencyDetail
+    """
+    queryset = MetaDependencyTask.objects.all()
+    serializer_class = MetaDependencyTaskSerializer
+
 
 class MetaObjectTaskList(APIView):
     """
-    View za 3 HTTP metode:
-    1. GET
-    2. POST
-    3. DELETE
+    Analogno s MetaBatchList
     """
     def get(self, request, format = None):
         meta_object_task_list = MetaObjectTask.objects.all()
@@ -155,6 +172,9 @@ class MetaObjectTaskList(APIView):
 
 
 class MetaObjectTaskDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Analogno s MetaBatchDetail
+    """
     queryset = MetaObjectTask.objects.all()
     serializer_class = MetaObjectTaskSerializer
     def update(self, request, *args, **kwargs):
@@ -167,10 +187,7 @@ class MetaObjectTaskDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class MetaObjectTypeList(APIView):
     """
-    View za 3 HTTP metode:
-    1. GET
-    2. POST
-    3. DELETE
+    Analogno s MetaBatchList
     """
     def get(self, request, format = None):
         meta_object_type_list = MetaObjectType.objects.all()
@@ -195,6 +212,9 @@ class MetaObjectTypeList(APIView):
 
 
 class MetaObjectTypeDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Analogno s MetaBatchDetail
+    """
     queryset = MetaObjectType.objects.all()
     serializer_class = MetaObjectTypeSerializer
     def update(self, request, *args, **kwargs):
@@ -204,14 +224,10 @@ class MetaObjectTypeDetail(generics.RetrieveUpdateDestroyAPIView):
         serializer.save(update_date =  timezone.now())
         return Response(serializer.data)
         
-##########################################################################################
-
+        
 class MetaAttributeList(APIView):
     """
-    View za 3 HTTP metode:
-    1. GET
-    2. POST
-    3. DELETE
+    Analogno s MetaBatchList
     """
     def get(self, request, format = None):
         meta_attribute_list = MetaAttribute.objects.all()
@@ -236,6 +252,9 @@ class MetaAttributeList(APIView):
 
 
 class MetaAttributeDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Analogno s MetaBatchDetail
+    """
     queryset = MetaAttribute.objects.all()
     serializer_class = MetaAttributeSerializer
     def update(self, request, *args, **kwargs):
@@ -246,14 +265,9 @@ class MetaAttributeDetail(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
 
-################################################################################################
-
 class MetaObjectList(APIView):
     """
-    View za 3 HTTP metode:
-    1. GET
-    2. POST
-    3. DELETE
+    Analogno s MetaBatchList
     """
     def get(self, request, format = None):
         meta_object_list = MetaObject.objects.all()
@@ -279,6 +293,9 @@ class MetaObjectList(APIView):
 
 
 class MetaObjectDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Analogno s MetaBatchDetail
+    """
     queryset = MetaObject.objects.all()
     serializer_class = MetaObjectSerializer
     def update(self, request, *args, **kwargs):
@@ -288,10 +305,14 @@ class MetaObjectDetail(generics.RetrieveUpdateDestroyAPIView):
         serializer.save(update_date=timezone.now())
         return Response(serializer.data)
 
-################################################################################################
-
 
 class DependencyBatchRecursionList(generics.ListCreateAPIView):
+    """
+    Ovaj View koristi rekurzivan SQL upit
+    tako da se razriješi hijarhijska ovisnost između batcheva.
+    Za konkretan batch vraća JSON koji u razinama prikazuje
+    koji batchevi ovisne o konkretnom batchu.
+    """
     model = DependencyBatchRecursion
     serializer_class = DependencyBatchRecursionSerializer
     def get_queryset(self):
@@ -318,6 +339,10 @@ class DependencyBatchRecursionList(generics.ListCreateAPIView):
 
 
 class DependencyTaskRecursionList(generics.ListCreateAPIView):
+    """
+    Ovaj View koristi rekurzivan SQL upit
+    tako da se razriješi hijarhijska ovisnost između taskova unutar batcha.
+    """
     model = DependencyTaskRecursion
     serializer_class = DependencyTaskRecursionSerializer
     def get_queryset(self):
@@ -346,10 +371,7 @@ class DependencyTaskRecursionList(generics.ListCreateAPIView):
 
 class MetaDatasourceList(APIView):
     """
-    View za 3 HTTP metode:
-    1. GET
-    2. POST
-    3. DELETE
+    Analogno s MetaBatchList
     """
     def get(self, request, format = None):
         meta_datasource_list = MetaDatasource.objects.all()
@@ -374,6 +396,9 @@ class MetaDatasourceList(APIView):
 
 
 class MetaDatasourceDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Analogno s MetaBatchDetail
+    """
     queryset = MetaDatasource.objects.all()
     serializer_class = MetaDatasourceSerializer
     def update(self, request, *args, **kwargs):
@@ -385,6 +410,9 @@ class MetaDatasourceDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class DomainValuesList(APIView):
+    """
+    Omogućava dohvaćanje svih mogućih domenskih vrijednosti za konkretan domenski atribut.
+    """
     def get(self, request, format=None):
         target_name = self.request.query_params.get('name', None)
         target_sid = DomainDirectory.objects.all().filter(domain_directory_name=target_name).values('domain_directory_sid')
