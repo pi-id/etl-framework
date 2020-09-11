@@ -105,8 +105,8 @@ DATABASES = {
     'default': {
         'ENGINE' :  'sql_server.pyodbc',
         'NAME' : 'ADM_Configuration',
-        'USER' : 'Student1',
-        'PASSWORD' : 'Student12345',
+        'USER' : 'student1',
+        'PASSWORD' : 'student1234',
         'HOST' : '127.0.0.1',
         'PORT' : '',
         'OPTIONS': {
