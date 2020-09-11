@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from .models import *
-
 """
 Serializeri služe za
 serijalizaciju modela u JSON i 

@@ -7,7 +7,6 @@ from .models import *
 from django.utils import timezone
 import logging
 
-logger = logging.getLogger(__name__)
 
 
 class MetaBatchList(APIView):
