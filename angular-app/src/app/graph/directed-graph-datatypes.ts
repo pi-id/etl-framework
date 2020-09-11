@@ -2,7 +2,7 @@ import { svg, SimulationNodeDatum, SimulationLinkDatum, forceSimulation} from 'd
 export class GraphNode implements SimulationNodeDatum{
     public x?: number;
     public y?: number;
-    constructor(public id: number){}
+    constructor(public id: number, public name?:string){}
   }
   
   export class GraphLink implements SimulationLinkDatum<GraphNode>{
