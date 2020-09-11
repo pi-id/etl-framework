@@ -3,10 +3,9 @@
 
 <div class="card">
     <p-table #dt styleClass="p-datatable-responsive-demo" [scrollable]="false" [value]="batches" [autoLayout]="true"
-        dataKey="batch_sid" [loading]="loading" editMode="row" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[5,10,15]"
-        [filterDelay]="0" [rowHover]="true"
-        [globalFilterFields]="['batch_sid', 'datasource_name', 'batch_id', 'batch_name',
+        dataKey="batch_sid" [loading]="loading" editMode="row" [paginator]="true" [rows]="5"
+        [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[5,10,15]" [filterDelay]="0" [rowHover]="true" [globalFilterFields]="['batch_sid', 'datasource_name', 'batch_id', 'batch_name',
         'batch_type', 'batch_status', 'server_name', 'source_database_name', 'destination_database_name',
         'ssis_package_name', 'job_name', 'job_step_name', 'job_scheduled', 'dashboard_type',
         'use_mail_status', 'insert_date', 'insert_user', 'update_date', 'update_user']"
@@ -15,14 +14,15 @@
             <div class="p-d-flex p-ai-center p-jc-between">
                 <h3 style="text-align: center;"><b>BATCH TABLE</b></h3>
                 <div style="text-align:left">
-                    <button pButton [appExport]="batches" fileName="batch_table"  pRipple icon="pi pi-file-excel" label="Export to excel"  class="p-button-danger p-mr-2">
+                    <button pButton [appExport]="batches" fileName="batch_table" pRipple icon="pi pi-file-excel"
+                        label="Export to excel" class="p-button-danger p-mr-2">
                     </button>
                     <br>
                     <br>
                     <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
-                    (click)="deleteSelectedBatches()"
-                    *ngIf="!(!selectedBatches || !selectedBatches.length)"></button>
-                    </div>
+                        (click)="deleteSelectedBatches()"
+                        *ngIf="!(!selectedBatches || !selectedBatches.length)"></button>
+                </div>
                 <div style="text-align:right">
                     <button pButton pAddRow [table]="dt" [newRow]="addNewRowClick()" label="New" icon="pi pi-plus"
                         class="p-button-danger p-mr-2"></button>
@@ -42,26 +42,46 @@
                 </th>
                 <th>Edit</th>
                 <th>Delete</th>
-                <th pSortableColumn="batch_sid">batch_sid <p-sortIcon field="batch_sid"></p-sortIcon></th>
-                <th pSortableColumn="datasource_name">datasource_name <p-sortIcon field="datasource_name"></p-sortIcon></th>
-                <th pSortableColumn="batch_id">batch_id<p-sortIcon field="batch_id"></p-sortIcon></th>
-                <th pSortableColumn="batch_name">batch_name<p-sortIcon field="batch_name"></p-sortIcon></th>
+                <th pSortableColumn="batch_sid">batch_sid <p-sortIcon field="batch_sid"></p-sortIcon>
+                </th>
+                <th pSortableColumn="datasource_name">datasource_name <p-sortIcon field="datasource_name"></p-sortIcon>
+                </th>
+                <th pSortableColumn="batch_id">batch_id<p-sortIcon field="batch_id"></p-sortIcon>
+                </th>
+                <th pSortableColumn="batch_name">batch_name<p-sortIcon field="batch_name"></p-sortIcon>
+                </th>
                 <th>batch_desc</th>
-                <th pSortableColumn="batch_type">batch_type<p-sortIcon field="batch_type"></p-sortIcon></th>
-                <th pSortableColumn="batch_status">batch_status<p-sortIcon field="batch_status"></p-sortIcon></th>
-                <th pSortableColumn="server_name">server_name<p-sortIcon field="server_name"></p-sortIcon></th>
-                <th pSortableColumn="source_database_name">source_database_name<p-sortIcon field="source_database_name"></p-sortIcon></th>
-                <th pSortableColumn="destination_database_name">destination_database_name<p-sortIcon field="destination_database_name"></p-sortIcon></th>
-                <th pSortableColumn="ssis_package_name">ssis_package_name <p-sortIcon field="ssis_package_name"></p-sortIcon></th>
-                <th pSortableColumn="job_name">job_name <p-sortIcon field="job_name"></p-sortIcon></th>
-                <th pSortableColumn="job_step_name">job_step_name <p-sortIcon field="job_step_name"></p-sortIcon></th>
+                <th pSortableColumn="batch_type">batch_type<p-sortIcon field="batch_type"></p-sortIcon>
+                </th>
+                <th pSortableColumn="batch_status">batch_status<p-sortIcon field="batch_status"></p-sortIcon>
+                </th>
+                <th pSortableColumn="server_name">server_name<p-sortIcon field="server_name"></p-sortIcon>
+                </th>
+                <th pSortableColumn="source_database_name">source_database_name<p-sortIcon field="source_database_name">
+                    </p-sortIcon>
+                </th>
+                <th pSortableColumn="destination_database_name">destination_database_name<p-sortIcon
+                        field="destination_database_name"></p-sortIcon>
+                </th>
+                <th pSortableColumn="ssis_package_name">ssis_package_name <p-sortIcon field="ssis_package_name">
+                    </p-sortIcon>
+                </th>
+                <th pSortableColumn="job_name">job_name <p-sortIcon field="job_name"></p-sortIcon>
+                </th>
+                <th pSortableColumn="job_step_name">job_step_name <p-sortIcon field="job_step_name"></p-sortIcon>
+                </th>
                 <th>job_scheduled</th>
-                <th pSortableColumn="dashboard_type">dashboard_type<p-sortIcon field="dashboard_type"></p-sortIcon></th>
+                <th pSortableColumn="dashboard_type">dashboard_type<p-sortIcon field="dashboard_type"></p-sortIcon>
+                </th>
                 <th>use_mail_status</th>
-                <th pSortableColumn="insert_date">insert_date <p-sortIcon field="insert_date"></p-sortIcon></th>
-                <th pSortableColumn="insert_user">insert_user<p-sortIcon field="insert_user"></p-sortIcon></th>
-                <th pSortableColumn="update_date">update_date<p-sortIcon field="update_date"></p-sortIcon></th>
-                <th pSortableColumn="update_user">update_user<p-sortIcon field="update_user"></p-sortIcon></th>
+                <th pSortableColumn="insert_date">insert_date <p-sortIcon field="insert_date"></p-sortIcon>
+                </th>
+                <th pSortableColumn="insert_user">insert_user<p-sortIcon field="insert_user"></p-sortIcon>
+                </th>
+                <th pSortableColumn="update_date">update_date<p-sortIcon field="update_date"></p-sortIcon>
+                </th>
+                <th pSortableColumn="update_user">update_user<p-sortIcon field="update_user"></p-sortIcon>
+                </th>
                 <th style="width:8rem"></th>
             </tr>
 
@@ -70,58 +90,81 @@
                 <th></th>
                 <th></th>
                 <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'batch_sid', 'startsWith')" placeholder="Search by batch_sid" class="p-column-filter">
+                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'batch_sid', 'startsWith')"
+                        placeholder="Search by batch_sid" class="p-column-filter">
                 </th>
                 <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'datasource_name', 'startsWith')" placeholder="Search by datasource_name" class="p-column-filter">
+                    <input pInputText type="text"
+                        (input)="dt.filter($event.target.value, 'datasource_name', 'startsWith')"
+                        placeholder="Search by datasource_name" class="p-column-filter">
                 </th>
                 <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'batch_id', 'startsWith')" placeholder="Search by batch_id" class="p-column-filter">
+                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'batch_id', 'startsWith')"
+                        placeholder="Search by batch_id" class="p-column-filter">
                 </th>
                 <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'batch_name', 'startsWith')" placeholder="Search by batch_name" class="p-column-filter">
-                </th>
-                <th></th>
-                <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'batch_type', 'startsWith')" placeholder="Search by batch_type" class="p-column-filter">
-                </th>
-                <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'batch_status', 'startsWith')" placeholder="Search by batch_status" class="p-column-filter">
-                </th>
-                <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'server_name', 'startsWith')" placeholder="Search by server_name" class="p-column-filter">
-                </th>
-                <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'source_database_name', 'startsWith')" placeholder="Search by source_database_name" class="p-column-filter">
-                </th>
-                <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'destination_database_name', 'startsWith')" placeholder="Search by destination_database_name" class="p-column-filter">
-                </th>
-                <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'ssis_package_name', 'startsWith')" placeholder="Search by ssis_package_name" class="p-column-filter">
-                </th>
-                <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'job_name', 'startsWith')" placeholder="Search by job_name" class="p-column-filter">
-                </th>
-                <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'job_step_name', 'startsWith')" placeholder="Search by job_step_name" class="p-column-filter">
+                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'batch_name', 'startsWith')"
+                        placeholder="Search by batch_name" class="p-column-filter">
                 </th>
                 <th></th>
                 <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'dashboard_type', 'startsWith')" placeholder="Search by dashboard_type" class="p-column-filter">
+                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'batch_type', 'startsWith')"
+                        placeholder="Search by batch_type" class="p-column-filter">
+                </th>
+                <th>
+                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'batch_status', 'startsWith')"
+                        placeholder="Search by batch_status" class="p-column-filter">
+                </th>
+                <th>
+                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'server_name', 'startsWith')"
+                        placeholder="Search by server_name" class="p-column-filter">
+                </th>
+                <th>
+                    <input pInputText type="text"
+                        (input)="dt.filter($event.target.value, 'source_database_name', 'startsWith')"
+                        placeholder="Search by source_database_name" class="p-column-filter">
+                </th>
+                <th>
+                    <input pInputText type="text"
+                        (input)="dt.filter($event.target.value, 'destination_database_name', 'startsWith')"
+                        placeholder="Search by destination_database_name" class="p-column-filter">
+                </th>
+                <th>
+                    <input pInputText type="text"
+                        (input)="dt.filter($event.target.value, 'ssis_package_name', 'startsWith')"
+                        placeholder="Search by ssis_package_name" class="p-column-filter">
+                </th>
+                <th>
+                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'job_name', 'startsWith')"
+                        placeholder="Search by job_name" class="p-column-filter">
+                </th>
+                <th>
+                    <input pInputText type="text"
+                        (input)="dt.filter($event.target.value, 'job_step_name', 'startsWith')"
+                        placeholder="Search by job_step_name" class="p-column-filter">
                 </th>
                 <th></th>
                 <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'insert_date', 'startsWith')" placeholder="Search by insert_date" class="p-column-filter">
+                    <input pInputText type="text"
+                        (input)="dt.filter($event.target.value, 'dashboard_type', 'startsWith')"
+                        placeholder="Search by dashboard_type" class="p-column-filter">
+                </th>
+                <th></th>
+                <th>
+                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'insert_date', 'startsWith')"
+                        placeholder="Search by insert_date" class="p-column-filter">
                 </th>
                 <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'insert_user', 'startsWith')" placeholder="Search by insert_user" class="p-column-filter">
+                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'insert_user', 'startsWith')"
+                        placeholder="Search by insert_user" class="p-column-filter">
                 </th>
                 <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'update_date', 'startsWith')" placeholder="Search by update_date" class="p-column-filter">
+                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'update_date', 'startsWith')"
+                        placeholder="Search by update_date" class="p-column-filter">
                 </th>
                 <th>
-                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'update_user', 'startsWith')" placeholder="Search by update_user" class="p-column-filter">
+                    <input pInputText type="text" (input)="dt.filter($event.target.value, 'update_user', 'startsWith')"
+                        placeholder="Search by update_user" class="p-column-filter">
                 </th>
                 <th style="width:8rem"></th>
             </tr>
@@ -150,9 +193,10 @@
                 <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
-                            <p-dropdown [options]="datasourcesOptions" [virtualScroll]="true" [(ngModel)]="batch.datasource_sid"
-                            [filter]="true" filterMatchMode="startsWith" (onChange)="batch.datasource_sid = $event.value" [style]="{'width':'100%'}" 
-                            placeholder="Select a datasource" ></p-dropdown>
+                            <p-dropdown [options]="datasourcesOptions" [virtualScroll]="true"
+                                [(ngModel)]="batch.datasource_sid" [filter]="true" filterMatchMode="startsWith"
+                                (onChange)="batch.datasource_sid = $event.value" [style]="{'width':'100%'}"
+                                placeholder="Select a datasource"></p-dropdown>
                         </ng-template>
                         <ng-template pTemplate="output">
                             {{batch.datasource_name}}
@@ -172,7 +216,8 @@
                 <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
-                            <input pInputText type="text" [(ngModel)]="batch.batch_name" required="true" requiredMessage="Batch name is required!" >
+                            <input pInputText type="text" [(ngModel)]="batch.batch_name" required="true"
+                                requiredMessage="Batch name is required!">
                         </ng-template>
                         <ng-template pTemplate="output">
                             {{batch.batch_name}}
@@ -205,17 +250,18 @@
 
                 <td>
                     <p-cellEditor>
-                      <ng-template pTemplate="input">
-                        <p-dropdown [options]="domain_values" [virtualScroll]="true" [(ngModel)]="batch.batch_status"
-                         [style]="{'width':'100%'}" placeholder="Select status" required="true">
-                        </p-dropdown>
-                      </ng-template>
-                      <ng-template pTemplate="output">
-                        {{batch.batch_status}}
-                      </ng-template>
+                        <ng-template pTemplate="input">
+                            <p-dropdown [options]="domain_values" [virtualScroll]="true"
+                                [(ngModel)]="batch.batch_status" [style]="{'width':'100%'}" placeholder="Select status"
+                                required="true">
+                            </p-dropdown>
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{batch.batch_status}}
+                        </ng-template>
                     </p-cellEditor>
-                  </td>
-          
+                </td>
+
 
                 <td>
                     <p-cellEditor>

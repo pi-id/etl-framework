@@ -20,11 +20,10 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ObjectComponent implements OnInit {
   objects: Object[];
+  selectedObjects: Object[]; 
   datasources: Datasource[];
   objectTypes:ObjectType[];
   objectDialog: boolean;
-  batch: Object;
-  selectedBatches: Object[];
   submitted: boolean;
   datasourcesOptions: SelectItem[]; 
   objectTypesOptions:SelectItem[];
@@ -127,6 +126,29 @@ export class ObjectComponent implements OnInit {
           });
       }
     });
+  }
+
+  deleteSelectedObjects(){
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete the selected objects?',
+      header: 'Confirm',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        console.log("accepted"); 
+         for(let attr of this.selectedObjects){
+          this.objectService.deleteObject(attr.object_sid).subscribe(
+            response => {
+              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Object with sid: ' + attr.object_sid + ' deleted', life: 6000 });
+              this.loadObjects();
+              this.selectedObjects = this.selectedObjects.filter(item => item.object_sid !== attr.object_sid);
+            },
+            error => {
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Object with sid: ' + attr.object_sid + ' couldn\'t be deleted', life: 6000 });
+              this.selectedObjects = this.selectedObjects.filter(item => item.object_sid !== attr.object_sid);
+            });
+         }
+      }
+  });
   }
 
   onRowEditInit(object: Object) {
