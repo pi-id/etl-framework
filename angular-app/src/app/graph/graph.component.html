@@ -1,15 +1,14 @@
  
 <div class="tab">
     <span>
-    <button id="defaultbutton" class="tablinks" mdbBtn color="danger" rounded="true" size="sm" class="my-0" (click)="openTab('Batch');drawBatchGraph()" >Batch</button>
-    <button class="tablinks" mdbBtn color="danger" rounded="true" size="sm" class="my-0"  (click)="openTab('Task');drawTaskGraph()">Task</button>
+    <button id="defaultbutton" class="tablinks" mdbBtn color="danger" rounded="true" size="sm" class="my-0" (click)="openTab('Batch');loadBatches()" >Batch</button>
+    <button class="tablinks" mdbBtn color="danger" rounded="true" size="sm" class="my-0"  (click)="openTab('Task')">Task</button>
     </span>
   </div>
 
 <div id="Batch" class="tabcontent" >
-    <p>Task Dependecies</p>
-    <p>Labels are displaying graph ids</p>
-    <div id="cont2"></div>
+    <p style="text-align:center">Labels are displaying batch sids</p>
+    <div id="cont2" style="text-align:center"></div>
     
     
    
@@ -17,10 +16,15 @@
 </div>
 
 
-<div id="Task" class="tabcontent">
-    <p>Task Dependecies</p>
-    <p>Labels are displaying task ids</p>
-    <div id="cont1"></div>
+<div id="Task" class="tabcontent" >
+    <p style="text-align:center">Task graph placeholder: this graph is only a placeholder.</p>
+    <div class="select" style="text-align:center" >
+    <p-dropdown [options]="batchOptions" [virtualScroll]="true" [(ngModel)]="selectedBatch" [filter]="true"
+                filterMatchMode="startsWith" scrollHeight="400px" [style]="{'width':'30%'}" placeholder="Select batch" (onChange)="drawTaskGraph()">
+              </p-dropdown>
+            </div>
+    
+    <div id="cont1" style="text-align:center"></div>
     
 </div>
 
